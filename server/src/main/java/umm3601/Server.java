@@ -25,7 +25,7 @@ import javax.servlet.http.Part;
 
 public class Server {
 
-    public static final String API_URL = "https://revolverenguardia.dungeon.website";
+    public static final String PUBLIC_URL = "https://revolverenguardia.dungeon.website";
 
     public static String databaseName = "test";
     public static MongoDatabase database;
@@ -65,6 +65,11 @@ public class Server {
         });
 
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+
+        before((request, response) -> {
+            response.header("Access-Control-Allow-Credentials", "true");
+            response.header("Access-Control-Allow-Origin", PUBLIC_URL);
+        });
 
         // Redirects for the "home" page
         redirect.get("", "/");
@@ -313,7 +318,7 @@ public class Server {
             String zipPath = QRCodes.createQRCodesFromAllBeds(
                     liveUploadID,
                     plantController.getGardenLocations(liveUploadID),
-                    API_URL + "/bed/");
+                    PUBLIC_URL + "/bed/");
 
             if(zipPath == null)
                 return null;
