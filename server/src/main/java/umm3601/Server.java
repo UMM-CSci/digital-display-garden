@@ -3,9 +3,14 @@ package umm3601;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
+import org.bson.Document;
 import spark.Route;
 import spark.utils.IOUtils;
 import com.mongodb.util.JSON;
+import umm3601.digitalDisplayGarden.Authentication.Auth;
+import umm3601.digitalDisplayGarden.Authentication.Cookie;
+import umm3601.digitalDisplayGarden.Authentication.ExpiredTokenException;
+import umm3601.digitalDisplayGarden.Authentication.UnauthorizedUserException;
 import umm3601.digitalDisplayGarden.BedController;
 import umm3601.digitalDisplayGarden.GardenCharts;
 import umm3601.digitalDisplayGarden.PlantController;
@@ -13,6 +18,9 @@ import umm3601.digitalDisplayGarden.PlantController;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.Properties;
 
 import static spark.Spark.*;
 
@@ -25,14 +33,27 @@ import javax.servlet.http.Part;
 
 public class Server {
 
-    public static final String PUBLIC_URL = "https://revolverenguardia.dungeon.website";
+    public static String PUBLIC_URL;
 
-    public static String databaseName = "test";
+    private static String clientId;
+    private static String clientSecret;
+    private static String callbackURL;
+
+    public static String databaseName;
     public static MongoDatabase database;
 
     private static String excelTempDir = "/tmp/digital-display-garden";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+
+
+        String configFileLocation;
+        if (args.length == 0) {
+            configFileLocation = "config.properties";
+        } else {
+            configFileLocation = args[0];
+        }
+        readConfig(configFileLocation);
 
         port(2538);
 
@@ -43,11 +64,13 @@ public class Server {
         staticFiles.location("/public");
 
         MongoClient client = new MongoClient();
-        database = client.getDatabase("test");
+        database = client.getDatabase(databaseName);
 
         PlantController plantController = new PlantController(database);
         GardenCharts chartMaker = new GardenCharts(database);
         BedController bedController = new BedController(database);
+        Auth auth = new Auth(clientId, clientSecret, callbackURL);
+
 
         options("/*", (request, response) -> {
 
@@ -158,6 +181,82 @@ public class Server {
         /*///////////////////////////////////////////////////////////////////
          * ADMIN ENDPOINTS
          *////////////////////////////////////////////////////////////////////
+
+
+        get("callback", (req, res) ->{
+            Map<String, String[]> params = req.queryMap().toMap();
+            String[] states = params.get("state");
+            String[] codes = params.get("code");
+            String[] errors = params.get("error");
+            if (null == states) {
+                // we REQUIRE that we be passed a state
+                halt(400);
+                return ""; // never reached
+            }
+            if (null == codes ) {
+                if (null == errors) {
+                    // we don't have codes, but we don't have an error either, so this a garbage request
+                    halt(400);
+                    return ""; // never reached
+                }
+                else if ("access_denied".equals(errors[0])) {
+                    // the user clicked "deny", so send them to the visitor page
+                    res.redirect(PUBLIC_URL);
+                    return ""; // send an empty body back on redirect
+                }
+                else {
+                    // an unknown error was passed to us, so we halt
+                    halt(400);
+                    return ""; // not reached
+                }
+            }
+            String state = states[0];
+            String code = codes[0];
+            try {
+                String originatingURL = auth.verifyCallBack(state, code);
+                if (null != originatingURL) {
+                    Cookie c = auth.getCookie();
+                    res.cookie(c.name, c.value, c.max_age);
+                    res.redirect(originatingURL);
+                    System.out.println("good");
+                    return ""; // not reached
+                } else {
+                    System.out.println("bad");
+                    res.status(403);
+                    return "?????"; // todo: return a reasonable message
+                }
+            } catch (UnauthorizedUserException e) {
+                res.redirect(PUBLIC_URL + "/admin/incorrectAccount");
+                return ""; // not reached
+            } catch (ExpiredTokenException e) {
+                // send the user to a page to tell them to login faster
+                res.redirect(PUBLIC_URL + "/admin/slowLogin");
+                return ""; // send empty body on redirect
+            }
+        });
+
+        get("api/check-authorization", (req, res) -> {
+            res.type("application/json");
+            res.header("Cache-Control","no-cache, no-store, must-revalidate");
+            String cookie = req.cookie("ddg");
+            Document returnDoc = new Document();
+            returnDoc.append("authorized", auth.authorized(cookie));
+            return JSON.serialize(returnDoc);
+        });
+
+        get("api/authorize", (req,res) -> {
+            String originatingURLs[] = req.queryMap().toMap().get("originatingURL");
+            String originatingURL;
+            if (originatingURLs == null) {
+                originatingURL = PUBLIC_URL;
+            } else {
+                originatingURL = originatingURLs[0];
+            }
+            res.redirect(auth.getAuthURL(originatingURL));
+            // I think we could return an arbitrary value since the redirect prevents this from being used
+            return res;
+        });
+
 
         // Accept an xls file
         post("api/admin/import", (req, res) -> {
@@ -416,6 +515,48 @@ public class Server {
             res.status(404);
             return "Sorry, we couldn't find that!";
         });
+    }
+
+
+    public static void readConfig(String configFileLocation) {
+        try {
+            InputStream input = new FileInputStream(configFileLocation);
+            Properties props = new Properties();
+            props.load(input);
+
+            clientId = props.getProperty("clientID");
+            if (null == clientId) {
+                System.err.println("Could not read Google OAuth Client ID (clientID) from properties file");
+                System.exit(1);
+            }
+            clientSecret = props.getProperty("clientSecret");
+            if (null == clientSecret) {
+                System.err.println("Could not read Google OAuth Client secret (clientSecret) from properties file");
+                System.exit(1);
+            }
+            PUBLIC_URL = props.getProperty("publicURL");
+            if (null == PUBLIC_URL) {
+                System.err.println("Could not read what url visitors access us at from the properties file");
+                System.exit(1);
+            }
+            callbackURL = props.getProperty("callbackURL");
+            if (null == PUBLIC_URL) {
+                System.err.println("Could not read what url to use for callback from the properties file");
+                System.exit(1);
+            }
+            databaseName = props.getProperty("databaseName");
+            if (null == databaseName) {
+                System.err.println("Could not read the Mongo database name properties file");
+                System.exit(1);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Failed to open the config file for reading");
+            System.exit(1);
+        } catch (IOException e) {
+            System.out.println("Failed to read the config file");
+            System.exit(1);
+        }
     }
 
     public static String getLiveUploadId()
