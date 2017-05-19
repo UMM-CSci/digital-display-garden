@@ -11,6 +11,11 @@ you should create a file by that name in `server/`. Note that this file is
 in `.gitignore` and thus won't be committed.
 
 
+
+#### serverPort
+
+This is the port that the Spark server will run on: `2538`
+
 #### clientID
 
 This is the Google OAuth2.0 Client ID. It is essentially
@@ -47,11 +52,14 @@ with `/callback` on the end.
 This is the name of the local MongoDB database that the program uses for
 storing all its data.
 
+
 ## Example file
 
 Here is an example of what such a file would look like:
 ```
 # Make sure there is no trailing white space at the end of any lines
+# Server Port
+serverPort=2538
 # Google OAuth2.0 Client ID
 clientID=verylongstringofrandomnumbersandletters.apps.googleusercontent.com
 # Google OAuth2.0 Client Secret
