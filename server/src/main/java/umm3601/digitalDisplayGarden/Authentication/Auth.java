@@ -5,6 +5,7 @@ package umm3601.digitalDisplayGarden.Authentication;
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.model.OAuth2AccessTokenErrorResponse;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.Gson;
 import com.nimbusds.jose.*;
@@ -22,6 +23,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import org.joda.time.DateTime;
+import spark.ExceptionHandler;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class Auth {
         authUsers.add("gordo580@morris.umn.edu");
         authUsers.add("schr1230@morris.umn.edu");
         authUsers.add("songx823@morris.umn.edu");
-        authUsers.add("ferri082@morris.umn.edu");
+        authUsers.add("frazi177@morris.umn.edu");
         authUsers.add("hoff0899@morris.umn.edu");
         authUsers.add("lopez477@morris.umn.edu");
         authUsers.add("chen4709@morris.umn.edu");
@@ -162,7 +164,7 @@ public class Auth {
         DateTime expDate = new DateTime((new Date()).getTime() + secondsToLive * 1000);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .issuer("digital-display-garden")
+                .issuer("ddg")
                 .claim("exp", expDate.toString())
                 .build();
 
@@ -189,7 +191,7 @@ public class Auth {
         DateTime expDate = new DateTime((new Date()).getTime() + 60 * 1000);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .issuer("digital-display-garden")
+                .issuer("ddg")
                 .claim("originatingURL", originatingURL)
                 .claim("exp", expDate.toString())
                 .build();
@@ -252,37 +254,41 @@ public class Auth {
      */
     public String verifyCallBack(String state, String code) throws UnauthorizedUserException, ExpiredTokenException {
         // parse the state and ensure its validity
+        System.out.println("VERIFYCB 0");
         RedirectToken verifiedState = unpackSharedGoogleSecret(state);
         DateTime expTime = new DateTime(verifiedState.exp);
         if(expTime.isBeforeNow()) {
             // the user took too long to complete the authentication
             throw new ExpiredTokenException("The DDG token is expired");
         }
-
+        System.out.println("VERIFYCB 1");
         try {
             // Use the callback code to get a token from Google with info
             // about the caller
-            OAuth2AccessToken accessToken = globalService.getAccessToken(code);
-            accessToken = globalService.refreshAccessToken(accessToken.getRefreshToken());
 
+            System.err.println(clientId);
+            OAuth2AccessToken accessToken = globalService.getAccessToken(code);
+            System.out.println("VERIFYCB 1.5");
+            accessToken = globalService.refreshAccessToken(accessToken.getRefreshToken());
+            System.out.println("VERIFYCB 2");
             // parse the token for the fields we want
             GoogleToken googleToken = gson.fromJson(accessToken.getRawResponse(), GoogleToken.class);
-
+            System.out.println("VERIFYCB 3");
             // Get the URL for Google's OpenID description
             OpenIDConfiguration openIDConfiguration = getOpenIDConfiguration();
-
+            System.out.println("VERIFYCB 4");
             // Confirm that the token is signed properly and extract the body as JSON
             String stringBody = parseAndValidate(googleToken.id_token, new URL(openIDConfiguration.jwks_uri));
-
+            System.out.println("VERIFYCB 5");
             // Parse the JSON for the fields we care about
             GoogleJwtBody body = gson.fromJson(stringBody, GoogleJwtBody.class);
-
+            System.out.println("VERIFYCB 6");
             // Confirm that the token is not expired
             if (new DateTime(body.exp * 1000).isBeforeNow()) {
                 // Google is sending us bad tokens!!!
                 return null;
             }
-
+            System.out.println("VERIFYCB 7");
             // Confirm that the user is on our whitelist
             boolean authorized = userIsAuthorized(body.email);
             if (authorized) {
@@ -296,6 +302,16 @@ public class Auth {
             // with interacting with Google's API
             e.printStackTrace();
             return null;
+        } catch (OAuth2AccessTokenErrorResponse e){
+            //invalid client
+            System.err.println("OAUTH2 ClientID was invalid!");
+            System.err.println("If you just set up a new ClientID then google may still be trying to process things.");
+            e.printStackTrace();
+            throw null;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            throw e;
         }
     }
 
