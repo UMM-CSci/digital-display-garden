@@ -254,41 +254,36 @@ public class Auth {
      */
     public String verifyCallBack(String state, String code) throws UnauthorizedUserException, ExpiredTokenException {
         // parse the state and ensure its validity
-        System.out.println("VERIFYCB 0");
         RedirectToken verifiedState = unpackSharedGoogleSecret(state);
         DateTime expTime = new DateTime(verifiedState.exp);
         if(expTime.isBeforeNow()) {
             // the user took too long to complete the authentication
             throw new ExpiredTokenException("The DDG token is expired");
         }
-        System.out.println("VERIFYCB 1");
+
         try {
             // Use the callback code to get a token from Google with info
             // about the caller
-
-            System.err.println(clientId);
             OAuth2AccessToken accessToken = globalService.getAccessToken(code);
-            System.out.println("VERIFYCB 1.5");
             accessToken = globalService.refreshAccessToken(accessToken.getRefreshToken());
-            System.out.println("VERIFYCB 2");
+
             // parse the token for the fields we want
             GoogleToken googleToken = gson.fromJson(accessToken.getRawResponse(), GoogleToken.class);
-            System.out.println("VERIFYCB 3");
+
             // Get the URL for Google's OpenID description
             OpenIDConfiguration openIDConfiguration = getOpenIDConfiguration();
-            System.out.println("VERIFYCB 4");
+
             // Confirm that the token is signed properly and extract the body as JSON
             String stringBody = parseAndValidate(googleToken.id_token, new URL(openIDConfiguration.jwks_uri));
-            System.out.println("VERIFYCB 5");
+
             // Parse the JSON for the fields we care about
             GoogleJwtBody body = gson.fromJson(stringBody, GoogleJwtBody.class);
-            System.out.println("VERIFYCB 6");
+
             // Confirm that the token is not expired
             if (new DateTime(body.exp * 1000).isBeforeNow()) {
                 // Google is sending us bad tokens!!!
                 return null;
             }
-            System.out.println("VERIFYCB 7");
             // Confirm that the user is on our whitelist
             boolean authorized = userIsAuthorized(body.email);
             if (authorized) {
@@ -306,10 +301,7 @@ public class Auth {
             //invalid client
             System.err.println("OAUTH2 ClientID was invalid!");
             System.err.println("If you just set up a new ClientID then google may still be trying to process things.");
-            e.printStackTrace();
-            throw null;
-        } catch (Exception e)
-        {
+            System.err.println("Otherwise make sure that there is no extra whitespace after the clientID or secretKey in config.properties");
             e.printStackTrace();
             throw e;
         }

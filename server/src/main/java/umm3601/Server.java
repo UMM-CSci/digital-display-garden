@@ -125,7 +125,7 @@ public class Server {
                 halt(400);
                 return ""; // never reached
             }
-            System.out.println("callback: states" + Arrays.toString(states) + " codes" + Arrays.toString(codes));
+
             if (null == codes ) {
                 if (null == errors) {
                     // we don't have codes, but we don't have an error either, so this a garbage request
@@ -145,15 +145,12 @@ public class Server {
             }
             String state = states[0];
             String code = codes[0];
-            System.out.println("GOTHERE");
+
             try {
                 String originatingURL = auth.verifyCallBack(state, code);
                 if (null != originatingURL) {
-                    System.out.println("GOTHERE");
                     Cookie c = auth.getCookie();
-                    System.out.println("GOTHERE");
                     res.cookie(c.name, c.value, c.max_age);
-                    System.out.println("GOTHERE");
                     res.redirect(originatingURL);
                     System.out.println("good");
                     return ""; // not reached
