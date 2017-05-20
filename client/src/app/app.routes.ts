@@ -7,7 +7,9 @@ import {ImportComponent} from "./admin/import.component";
 import {ExportComponent} from "./admin/export.component";
 import {GraphComponent} from "./admin/google-charts.component";
 import {PlantComponent} from "./garden/components/plant_list/src/plant.component";
-
+import {AuthGuard} from "./admin/authentication/auth-guard";
+import {IncorrectAccountComponent} from "./admin/authentication/incorrect-account.component";
+import {SlowLoginComponent} from "./admin/authentication/slow-login.component";
 
 export const routes: Routes = [
 
@@ -15,10 +17,12 @@ export const routes: Routes = [
     { path: 'bed', redirectTo: "/bed/all", pathMatch: 'full' },
     { path: 'bed/:id', component: GardenComponent },
     { path: 'plant/:id', component: PlantComponent },
-    { path: 'adminj148iz5noq50aaq5', component: AdminComponent },
-    { path: 'adminj148iz5noq50aaq5/importData', component: ImportComponent},
-    { path: 'adminj148iz5noq50aaq5/exportData', component: ExportComponent},
-    { path: 'adminj148iz5noq50aaq5/graph', component: GraphComponent},
+    { path: 'admin', component: AdminComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
+    { path: 'admin/importData', component: ImportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
+    { path: 'admin/exportData', component: ExportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
+    { path: 'admin/graph', component: GraphComponent},
+    { path: 'admin/incorrectAccount', component: IncorrectAccountComponent},
+    { path: 'admin/slowLogin', component: SlowLoginComponent},
 
 ];
 
