@@ -10,6 +10,8 @@ import {Observable} from "rxjs";
 // Component class
 export class GraphComponent implements OnInit {
 
+    authorized: boolean;
+
     constructor(private adminService: AdminService) {
     }
 
@@ -23,6 +25,7 @@ export class GraphComponent implements OnInit {
         this.updatetop20likes();
         this.updatetop20dislikes();
         this.updatetop20comments();
+        this.adminService.authorized().subscribe(authorized => this.authorized = authorized);
     }
 
     public updateLineChart(): void{
