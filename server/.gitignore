@@ -1,3 +1,4 @@
 build
 .nfs
 config.properties
+authorized.users
