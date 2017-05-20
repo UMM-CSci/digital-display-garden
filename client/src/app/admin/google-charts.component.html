@@ -1,3 +1,95 @@
+<div *ngIf="this.authorized" class="charts-page">
+
+    <button  [routerLink]="['/admin']" class="btn btn-primary btn-lg" style="float: right">Back to Admin Page</button>
+
+    <div style="min-height: 40px"></div>
+
+    <!--****************  Unused Bar and Line Chart *******************-->
+
+    <!--<div class="chart" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">-->
+        <!--<google-chart [data]="columnChartOptions"></google-chart>-->
+        <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateBarChart()" >-->
+            <!--<span aria-hidden="true"></span>-->
+            <!--Update Graph-->
+        <!--</button>-->
+    <!--</div>-->
+    <!--<div class="chart">-->
+        <!--<google-chart [data]="line_ChartData"></google-chart>-->
+        <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateLineChart()" >-->
+            <!--<span aria-hidden="true"></span>-->
+            <!--Update Graph-->
+        <!--</button>-->
+    <!--</div>-->
+
+    <!--****************  Unused Bar and Line Chart *******************-->
+
+    <div class="chart">
+        <google-chart [data]="comboChart"></google-chart>
+        <button type="button" class="btn btn-primary btn-lg" (click) = "this.updateComboChart()">
+            <span aria-hidden="true"></span>
+            Update Graph
+        </button>
+    </div>
+
+
+    <!--****************  Unused Map *******************-->
+    <!--<div class="chart">-->
+        <!--<google-chart [data]="mapOptions"></google-chart>-->
+        <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateMap()" >-->
+            <!--<span aria-hidden="true"></span>-->
+            <!--Update Graph-->
+        <!--</button>-->
+    <!--</div>-->
+    <!--****************  Unused Map *******************-->
+
+    <div id = "chartDiv" padding="5%">
+        <google-chart [data] = "bubbleOption"></google-chart>
+        <button type="button" class="btn btn-primary btn-lg" (click) = "this.updateBubble()" >
+            <span aria-hidden="true"></span>
+            Update Graph
+        </button>
+    </div>
+
+    <!--<div class="dropdown">
+        <button class="dropbtn">Dropdown</button>
+        <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
+    </div>-->
+
+    <div style="min-height: 47px"></div>
+
+    <div id = "top20LikesDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
+        <google-chart [data] = "top20ChartDataLikes"></google-chart>
+        <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20likes()" >
+            <span aria-hidden="true"></span>
+            Update Graph
+        </button>
+    </div>
+    <div id = "top20DislikesDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
+        <google-chart [data] = "top20ChartDataDisLikes"></google-chart>
+        <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20dislikes()" >
+            <span aria-hidden="true"></span>
+            Update Graph
+        </button>
+
+    </div>
+    <div id = "top20CommentsDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
+        <google-chart [data] = "top20ChartDataComments"></google-chart>
+        <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20comments()" >
+            <span aria-hidden="true"></span>
+            Update Graph
+        </button>
+    </div>
+</div>
+<!-- If-Else blocks have been syntactically included since AngularJS
+  but never actually worked until Angular 4 Beta ¯\_(ツ)_/¯
+-->
+<div *ngIf="!this.authorized">
+    <h2>You are not authorized to view this page.</h2>
+</div>
 <style>
     .chart{
         padding-left: 5%;
@@ -5,93 +97,11 @@
         padding-top: 1%;
         padding-bottom: 1%;
     }
-</style>
 
-<button  [routerLink]="['/adminj148iz5noq50aaq5']" class="btn btn-primary btn-lg" style="float: right">Back to Admin Page</button>
+    .charts-page {
+        margin-top: -115px;
+    }
 
-<div style="min-height: 40px"></div>
-
-<!--****************  Unused Bar and Line Chart *******************-->
-
-<!--<div class="chart" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">-->
-    <!--<google-chart [data]="columnChartOptions"></google-chart>-->
-    <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateBarChart()" >-->
-        <!--<span aria-hidden="true"></span>-->
-        <!--Update Graph-->
-    <!--</button>-->
-<!--</div>-->
-<!--<div class="chart">-->
-    <!--<google-chart [data]="line_ChartData"></google-chart>-->
-    <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateLineChart()" >-->
-        <!--<span aria-hidden="true"></span>-->
-        <!--Update Graph-->
-    <!--</button>-->
-<!--</div>-->
-
-<!--****************  Unused Bar and Line Chart *******************-->
-
-<div class="chart">
-    <google-chart [data]="comboChart"></google-chart>
-    <button type="button" class="btn btn-primary btn-lg" (click) = "this.updateComboChart()">
-        <span aria-hidden="true"></span>
-        Update Graph
-    </button>
-</div>
-
-
-<!--****************  Unused Map *******************-->
-<!--<div class="chart">-->
-    <!--<google-chart [data]="mapOptions"></google-chart>-->
-    <!--<button type="button" class="btn btn-primary btn-lg" (click) = "this.updateMap()" >-->
-        <!--<span aria-hidden="true"></span>-->
-        <!--Update Graph-->
-    <!--</button>-->
-<!--</div>-->
-<!--****************  Unused Map *******************-->
-
-<div id = "chartDiv" padding="5%">
-    <google-chart [data] = "bubbleOption"></google-chart>
-    <button type="button" class="btn btn-primary btn-lg" (click) = "this.updateBubble()" >
-        <span aria-hidden="true"></span>
-        Update Graph
-    </button>
-</div>
-
-<!--<div class="dropdown">
-    <button class="dropbtn">Dropdown</button>
-    <div class="dropdown-content">
-        <a href="#">Link 1</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
-    </div>
-</div>-->
-
-<div style="min-height: 47px"></div>
-
-<div id = "top20LikesDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
-    <google-chart [data] = "top20ChartDataLikes"></google-chart>
-    <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20likes()" >
-        <span aria-hidden="true"></span>
-        Update Graph
-    </button>
-</div>
-<div id = "top20DislikesDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
-    <google-chart [data] = "top20ChartDataDisLikes"></google-chart>
-    <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20dislikes()" >
-        <span aria-hidden="true"></span>
-        Update Graph
-    </button>
-
-</div>
-<div id = "top20CommentsDiv" style="padding-left: 5%; padding-right: 5%; padding-top: 1%; padding-bottom: 1%;">
-    <google-chart [data] = "top20ChartDataComments"></google-chart>
-    <button type="button" class="btn btn-primary btn-lg" (click) = "this.updatetop20comments()" >
-        <span aria-hidden="true"></span>
-        Update Graph
-    </button>
-</div>
-
-<style>
     #chartDiv {
         background-image: url("http://localhost:2538/api/admin/gardenPicture");
         width: 1074px;
