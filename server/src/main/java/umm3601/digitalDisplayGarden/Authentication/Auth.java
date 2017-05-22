@@ -77,7 +77,7 @@ public class Auth {
         authUsers.add("gordo580@morris.umn.edu");
         authUsers.add("schr1230@morris.umn.edu");
         authUsers.add("songx823@morris.umn.edu");
-        authUsers.add("frazi177@morris.umn.edu");
+        authUsers.add("frdf177@morris.umn.edu");
         authUsers.add("hoff0899@morris.umn.edu");
         authUsers.add("lopez477@morris.umn.edu");
         authUsers.add("chen4709@morris.umn.edu");
