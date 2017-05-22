@@ -2,10 +2,10 @@ import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import {GardenComponent} from "./garden/src/garden-component";
-import {AdminComponent} from "./admin/admin.component";
-import {ImportComponent} from "./admin/import.component";
-import {ExportComponent} from "./admin/export.component";
-import {GraphComponent} from "./admin/google-charts.component";
+import {AdminComponent} from "./admin/src/admin.component";
+import {ImportComponent} from "./admin/src/import.component";
+import {ExportComponent} from "./admin/src/export.component";
+import {GraphComponent} from "./admin/src/google-charts.component";
 import {PlantComponent} from "./garden/components/plant_list/src/plant.component";
 import {AuthGuard} from "./admin/authentication/auth-guard";
 import {IncorrectAccountComponent} from "./admin/authentication/incorrect-account.component";

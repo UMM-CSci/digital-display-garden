@@ -1,11 +1,11 @@
 import {ComponentFixture, TestBed, async} from "@angular/core/testing";
 import { Observable } from "rxjs";
 import {FormsModule} from "@angular/forms";
-import {AdminService} from "./admin.service";
+import {AdminService} from "../src/admin.service";
 import {RouterTestingModule} from "@angular/router/testing";
-import {NavbarComponent} from "../navbar/navbar.component";
-import {ImportComponent} from "./import.component";
-import {FileUploadComponent} from "./file-upload.component";
+import {NavbarComponent} from "../../navbar/navbar.component";
+import {ImportComponent} from "../src/import.component";
+import {FileUploadComponent} from "../src/file-upload.component";
 import { Http } from '@angular/http';
 
 describe("Import Component", () => {
@@ -56,7 +56,7 @@ describe("Import Component", () => {
 
     it("can import a file", () => {
         importComponent.fu.inputEl = {nativeElement: {files: {length: 1, item: (x) => "eh"}}};
-        importComponent.handleUpload();
+        importComponent.handleUploadForImport();
         expect(importComponent.filename).toEqual("mockFileName");
         expect(importComponent.uploadAttempted).toEqual(true);
     });
