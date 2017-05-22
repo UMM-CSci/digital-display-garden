@@ -23,6 +23,10 @@ export class AdminService {
         return this.http.request(this.url + "admin/liveUploadId").map(res => res.json());
     }
 
+    deleteUploadID(uploadID : string) : Observable<any> {
+        return this.http.delete(this.url + "deleteData/" + uploadID, {withCredentials: true}).map(res => res.json());
+    }
+
     //Google Charts HTTP requests
 
     getViewsPerHour(): Observable<any[][]> {
