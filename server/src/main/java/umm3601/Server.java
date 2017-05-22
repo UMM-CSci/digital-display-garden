@@ -482,44 +482,69 @@ public class Server {
 
         //Get the ViewsPerHour chart
         get("api/admin/charts/viewsPerHour", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
             return chartMaker.getPlantViewsPerHour(getLiveUploadId());
         });
 
         //Get the data to put in the plant metadata map
         get("api/admin/charts/plantMetadataMap", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
-
             return chartMaker.getBedMetadataForMap(plantController, getLiveUploadId());
         });
 
         //Get the data to put in the plant comboChart
         //(could be refactored to be /api/admin/charts/gardenViewsComboChart)
         get("api/admin/charts/comboChart", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
-
             return chartMaker.getComboChart(getLiveUploadId());
         });
 
         get("api/admin/charts/plantMetadataBubbleMap", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
-
             return chartMaker.getBedMetadataForBubbleMap(plantController, bedController, getLiveUploadId());
         });
 
         get("api/admin/charts/top20Likes", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
             String type = "likes";
             return chartMaker.top20Charts(plantController, getLiveUploadId(), type);
         });
 
         get("api/admin/charts/top20disLikes", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
             String type = "dislikes";
             return chartMaker.top20Charts(plantController, getLiveUploadId(), type);
         });
 
         get("api/admin/charts/top20Comments", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
             res.type("application/json");
             String type = "comments";
             return chartMaker.top20Charts(plantController, getLiveUploadId(), type);
