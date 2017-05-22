@@ -399,8 +399,9 @@ public class PlantController {
                 Iterator<Document> iterator = jsonPlant.iterator();
 
                 if(iterator.hasNext()){
-                    toInsert.put("commentOnPlant", iterator.next().getString("id"));
-                    toInsert.put("commentInBed", iterator.next().getString("gardenLocation"));
+                    Document plantDoc = iterator.next();
+                    toInsert.put("commentOnPlant", plantDoc.getString("id"));
+                    toInsert.put("commentInBed", plantDoc.getString("gardenLocation"));
                 } else {
                     System.err.println("Was passed malformed storePlantComment request");
                     return false;
