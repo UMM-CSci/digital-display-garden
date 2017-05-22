@@ -16,11 +16,11 @@ export class AdminService {
     //Upload ID HTTP requests
 
     getUploadIds(): Observable<string[]> {
-        return this.http.request(this.url + "admin/uploadIds").map(res => res.json());
+        return this.http.request(this.url + "admin/uploadIds", {withCredentials: true}).map(res => res.json());
     }
 
     getLiveUploadId(): Observable<string> {
-        return this.http.request(this.url + "admin/liveUploadId").map(res => res.json());
+        return this.http.request(this.url + "admin/liveUploadId", {withCredentials: true}).map(res => res.json());
     }
 
     deleteUploadID(uploadID : string) : Observable<any> {
@@ -30,30 +30,30 @@ export class AdminService {
     //Google Charts HTTP requests
 
     getViewsPerHour(): Observable<any[][]> {
-        return this.http.request(this.url + "admin/charts/viewsPerHour").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/viewsPerHour", {withCredentials: true}).map(res => res.json())
     }
 
     getComboChart(): Observable<any [][]> {
-        return this.http.request(this.url + "admin/charts/comboChart").map(res => res.json());
+        return this.http.request(this.url + "admin/charts/comboChart", {withCredentials: true}).map(res => res.json());
     }
 
     getBedMetadataForMap(): Observable<any[]> {
-        return this.http.request(this.url + "admin/charts/plantMetadataMap").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/plantMetadataMap", {withCredentials: true}).map(res => res.json())
     }
 
     getBedMetadataForBubble(): Observable<any[]> {
-        return this.http.request(this.url + "admin/charts/plantMetadataBubbleMap").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/plantMetadataBubbleMap", {withCredentials: true}).map(res => res.json())
     }
 
     get20MostLikes(): Observable<any[]> {
-        return this.http.request(this.url + "admin/charts/top20Likes").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/top20Likes", {withCredentials: true}).map(res => res.json())
     }
 
     get20MostDisLikes(): Observable<any[]> {
-        return this.http.request(this.url + "admin/charts/top20disLikes").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/top20disLikes", {withCredentials: true}).map(res => res.json())
     }
 
     get20MostComments(): Observable<any[]> {
-        return this.http.request(this.url + "admin/charts/top20Comments").map(res => res.json())
+        return this.http.request(this.url + "admin/charts/top20Comments", {withCredentials: true}).map(res => res.json())
     }
 }
