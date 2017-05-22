@@ -74,7 +74,7 @@ public class Auth {
 
     private AuthWatchdogThread authorizeUserChangePoller = null;
 
-    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException, FileNotFoundException {
+    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.gson = new Gson();
@@ -100,8 +100,8 @@ public class Auth {
         catch(FileNotFoundException fnfe)
         {
             System.err.println("authorized.users file not found!");
-            System.err.println("Could not add users to set of authorized users");
-            throw fnfe;
+            System.err.println("Could not add users to initial set of authorized users");
+            System.err.println("Create authorized.users and authorized users should be imported automatically.");
         }
 
 
