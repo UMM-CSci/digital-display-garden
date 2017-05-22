@@ -1,8 +1,10 @@
 <div *ngIf="this.authorized" class="charts-page">
 
+    <div style="min-height: 10px"></div>
+
     <button  [routerLink]="['/admin']" class="btn btn-primary btn-lg" style="float: right">Back to Admin Page</button>
 
-    <div style="min-height: 40px"></div>
+    <div style="min-height: 50px"></div>
 
     <!--****************  Unused Bar and Line Chart *******************-->
 
@@ -96,10 +98,6 @@
         padding-right: 5%;
         padding-top: 1%;
         padding-bottom: 1%;
-    }
-
-    .charts-page {
-        margin-top: -115px;
     }
 
     #chartDiv {
