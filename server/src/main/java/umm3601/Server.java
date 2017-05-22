@@ -380,6 +380,23 @@ public class Server {
 
         });
 
+        delete("api/deleteData/:uploadID", (req, res) -> {
+            String cookie = req.cookie("ddg");
+            if(!auth.authorized(cookie)) {
+                halt(403);
+            }
+            res.type("application/json");
+            String uploadID = req.params("uploadID");
+            try {
+                return JSON.serialize(plantController.deleteUploadID(uploadID));
+            } catch (IllegalStateException e) {
+                Document failureStatus = new Document();
+                failureStatus.append("message", e.getMessage());
+                res.status(400);
+                return JSON.serialize(failureStatus);
+            }
+        });
+
         get("api/admin/export", (req, res) -> {
             String cookie = req.cookie("ddg");
             if(!auth.authorized(cookie)) {
