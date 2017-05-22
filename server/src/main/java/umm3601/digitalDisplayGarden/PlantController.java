@@ -707,9 +707,12 @@ public class PlantController {
         Document filterDoc = new Document();
         Document returnDoc = new Document();
 
-        filterDoc.append("uploadID", uploadID);
-        long deleted = plantCollection.deleteMany(filterDoc).getDeletedCount();
-        returnDoc.append("success", deleted != 0);
+        filterDoc.append("uploadId", uploadID);
+        boolean deleted = plantCollection.deleteMany(filterDoc).getDeletedCount() > 0;
+        deleted = deleted && (bedCollection.deleteMany(filterDoc).getDeletedCount() > 0);
+        commentCollection.deleteMany(filterDoc);
+
+        returnDoc.append("success", deleted);
         returnDoc.append("uploadIDs", ExcelParser.listUploadIds(db));
 
         //deleteDirectory(new File(".photos/" + uploadID));
