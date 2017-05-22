@@ -26,8 +26,7 @@ import org.joda.time.DateTime;
 import spark.ExceptionHandler;
 import spark.utils.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyPair;
@@ -58,8 +57,8 @@ public class Auth {
     // For authenticating callbacks
     private final OAuth20Service globalService;
 
-    // hard-coded list of users that we will accept
-    private List<String> authUsers;
+    // hard-coded set of users that we will accept
+    private Set<String> authUsers;
 
     // Public/Private Keypair for signing our own JSON Web Tokens
     private KeyPair keyPair;
@@ -68,24 +67,24 @@ public class Auth {
     // authenticating them
     private final String callbackURL;
 
-    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException {
+    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException, FileNotFoundException {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.gson = new Gson();
-        this.authUsers = new ArrayList<>();
-        // todo: trim this list in June 2017
-        authUsers.add("gordo580@morris.umn.edu");
-        authUsers.add("schr1230@morris.umn.edu");
-        authUsers.add("songx823@morris.umn.edu");
-        authUsers.add("frazi177@morris.umn.edu");
-        authUsers.add("hoff0899@morris.umn.edu");
-        authUsers.add("lopez477@morris.umn.edu");
-        authUsers.add("chen4709@morris.umn.edu");
-        authUsers.add("mitch809@morris.umn.edu");
-        authUsers.add("ejordan@umn.edu");
-        authUsers.add("poppesr@umn.edu");
-        authUsers.add("lamberty@morris.umn.edu");
-        authUsers.add("mcphee@morris.umn.edu");
+        this.authUsers = new TreeSet<>();
+
+
+        try {
+            String authFileLocation = "authorized.users";
+            readAuthenticatedUsers(new FileInputStream(authFileLocation));
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            System.err.println("authorized.users file not found!");
+            System.err.println("Could not add users to set of authorized users");
+            throw fnfe;
+        }
+
         this.globalService = new ServiceBuilder()
                 .apiKey(clientId)
                 .apiSecret(clientSecret)
@@ -383,6 +382,32 @@ public class Auth {
         Cookie c = new Cookie("ddg", cookieBody, timeToLive);
 
         return c;
+    }
+
+    private void readAuthenticatedUsers(InputStream authFileStream)
+    {
+        Set<String> out = new TreeSet<String>();
+        try {
+            Scanner reader = new Scanner(authFileStream);
+            String token;
+            while(reader.hasNext())
+            {
+                token = reader.next();
+                if(token.equals("ALLOW")) {
+                    String authorizedUser = reader.next();
+                    out.add(authorizedUser);
+                    System.out.println("Authorizing " + authorizedUser);
+                }
+            }
+        }
+        catch(NoSuchElementException e)
+        {
+            System.err.println("Authorized User file is corrupt!");
+            System.err.println("Expected: email address. Found: end of file");
+            e.printStackTrace();
+            throw e;
+        }
+        authUsers = out;
     }
 
 }

@@ -73,7 +73,6 @@ public class Server {
         BedController bedController = new BedController(database);
         Auth auth = new Auth(clientId, clientSecret, callbackURL);
 
-
         options("/*", (request, response) -> {
 
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
