@@ -313,6 +313,7 @@ public class ExcelParser {
 
             Document newPlantFilter = new Document(filterByNewUploadId);
             newPlantFilter.put("id", oldPlant.getString("id"));
+            newPlantFilter.put("gardenLocation", oldPlant.getString("gardenLocation"));
 
             //Looks for a plant that has the same plantId with the new uploadId and migrates old metadata over
             //If a plant with no such plantId can be found, it will ignore it.
@@ -333,8 +334,8 @@ public class ExcelParser {
             //Only re-upload a comment if the plant it points to still exists
             Document newPlantFilter = new Document(filterByNewUploadId);
             newPlantFilter.put("id", comment.get("commentOnPlant"));
+            newPlantFilter.put("gardenLocation", comment.get("commentInBed"));
             if(plantCollection.find(newPlantFilter).first() != null) {
-
                 commentCollection.insertOne(comment);
             }
         }
