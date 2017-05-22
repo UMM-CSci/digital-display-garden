@@ -156,7 +156,7 @@ public class Auth {
         }
     }
 
-    String generateCookieBody(int secondsToLive) {
+    public String generateCookieBody(int secondsToLive) {
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         JWSSigner signer = new RSASSASigner(privateKey);
 
@@ -182,7 +182,7 @@ public class Auth {
 
 
 
-    String generateSharedGoogleSecret(String originatingURL) {
+    public String generateSharedGoogleSecret(String originatingURL) {
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         JWSSigner signer = new RSASSASigner(privateKey);
 
@@ -214,7 +214,7 @@ public class Auth {
      * @param state a JWT that we generated to send to Google
      * @return The parsed body of the JWT, or null if an error occurred
      */
-    RedirectToken unpackSharedGoogleSecret(String state) {
+    public RedirectToken unpackSharedGoogleSecret(String state) {
         try {
             SignedJWT parsedState = SignedJWT.parse(state);
             JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey)keyPair.getPublic());
