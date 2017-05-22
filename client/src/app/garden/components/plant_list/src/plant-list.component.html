@@ -96,7 +96,7 @@
 
         <div class="plant-list-body">
             <ul>
-                <li *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.id]">
+                <li *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.gardenLocation, plant.id]">
                     <a>
                         <span class="common-name"> {{ plant.commonName }}</span>
                         <br>
