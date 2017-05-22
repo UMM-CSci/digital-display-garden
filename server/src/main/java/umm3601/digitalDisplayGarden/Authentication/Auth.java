@@ -29,6 +29,7 @@ import spark.utils.IOUtils;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.*;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +38,10 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.nio.file.StandardWatchEventKinds.*;
 
 // For parsing the JWT from Google OAuth
 
@@ -67,12 +72,26 @@ public class Auth {
     // authenticating them
     private final String callbackURL;
 
-    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException, FileNotFoundException {
+    private AuthWatchdogThread authorizeUserChangePoller = null;
+
+    public Auth(String clientId, String clientSecret, String callbackURL) throws NoSuchAlgorithmException {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.gson = new Gson();
         this.authUsers = new TreeSet<>();
 
+        try {
+            WatchService watchService = FileSystems.getDefault().newWatchService();
+            Path path = Paths.get(".");
+            WatchKey watchKey = path.register(watchService, ENTRY_CREATE);
+            authorizeUserChangePoller = new AuthWatchdogThread(watchKey);
+            authorizeUserChangePoller.start();
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("WatchService could not be established!");
+            System.err.println("authorized.users will not automatically be imported.");
+        }
 
         try {
             String authFileLocation = "authorized.users";
@@ -81,9 +100,10 @@ public class Auth {
         catch(FileNotFoundException fnfe)
         {
             System.err.println("authorized.users file not found!");
-            System.err.println("Could not add users to set of authorized users");
-            throw fnfe;
+            System.err.println("Could not add users to initial set of authorized users");
+            System.err.println("Create authorized.users and authorized users should be imported automatically.");
         }
+
 
         this.globalService = new ServiceBuilder()
                 .apiKey(clientId)
@@ -408,6 +428,48 @@ public class Auth {
             throw e;
         }
         authUsers = out;
+    }
+
+    //https://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
+    private class AuthWatchdogThread extends Thread
+    {
+        WatchKey key;
+        public AuthWatchdogThread(WatchKey wk)
+        {
+            this.key = wk;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Authorized User Watchdog Service Started");
+            while (true) {
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    //we only register "ENTRY_MODIFY" so the context is always a Path.
+                    final Path changed = (Path) event.context();
+//                    System.out.println("Event: " + event.kind().toString());
+//                    System.out.println("Target: " + changed.toString());
+
+                    if (changed.toString().equals("authorized.users")) {
+                        if(event.kind().equals(ENTRY_CREATE) || event.kind().equals(ENTRY_MODIFY))
+                            System.out.println("Authorized Users file has changed.");
+                            try {
+                                readAuthenticatedUsers(new FileInputStream("authorized.users"));
+                            }
+                            catch(IOException ioe)
+                            {
+                                System.err.println("Failed to read authenticated users!");
+                                ioe.printStackTrace();
+                            }
+                    }
+                }
+                // reset the key
+                boolean valid = key.reset();
+                if (!valid) {
+                    System.out.println("Key has been unregistered");
+                }
+            }
+
+        }
     }
 
 }
