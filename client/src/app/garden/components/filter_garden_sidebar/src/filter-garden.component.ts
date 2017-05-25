@@ -6,7 +6,7 @@
  */
 import { Component } from '@angular/core';
 import {BedDropdownService} from "../../bed_dropdown/src/bed-dropdown.service";
-import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-name-dropdown.service";
+
 
 @Component({
     selector: 'filter-garden-component',
@@ -15,8 +15,8 @@ import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-n
 
 export class FilterGardenComponent {
 
-    constructor(private bedListService: BedDropdownService,
-                private commonNameListService: CommonNameDropdownService){ }
+    constructor(private bedListService: BedDropdownService,){ }
 
+    public filterTerms : string;
 }
 

@@ -77,7 +77,10 @@
             </div>
 
             <div class="common-name">
-                <common-name-dropdown></common-name-dropdown>
+                <div class="searchField col-xs-8">
+                    <input type="text" placeholder="Find a flower" class="form-control search-field"
+                           [(ngModel)]="filterTerms">
+                </div>
             </div>
 
         </div>

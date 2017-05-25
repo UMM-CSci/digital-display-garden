@@ -10,11 +10,9 @@ import { NavbarComponent } from './app/navbar/navbar.component';
 import { GardenComponent } from "./app/garden/src/garden-component";
 import { PlantListComponent } from "./app/garden/components/plant_list/src/plant-list.component";
 import { BedDropdownComponent } from "./app/garden/components/bed_dropdown/src/bed-dropdown.component";
-import { CommonNameDropdownComponent } from "./app/garden/components/common_name_dropdown/src/common-name-dropdown.component";
 
 import { PlantListService } from "./app/garden/components/plant_list/src/plant-list.service";
 import { BedDropdownService } from "./app/garden/components/bed_dropdown/src/bed-dropdown.service";
-import { CommonNameDropdownService } from "./app/garden/components/common_name_dropdown/src/common-name-dropdown.service";
 import { AdminComponent } from "./app/admin/admin.component";
 import { PlantComponent } from "./app/garden/components/plant_list/src/plant.component";
 import { ImportComponent } from "./app/admin/import.component";
@@ -48,7 +46,6 @@ import { RouterModule } from "@angular/router";
         FilterGardenComponent,
         PlantListComponent,
         BedDropdownComponent,
-        CommonNameDropdownComponent,
         PlantComponent,
         AdminComponent,
         ImportComponent,
@@ -61,7 +58,6 @@ import { RouterModule } from "@angular/router";
     providers: [
         PlantListService,
         BedDropdownService,
-        CommonNameDropdownService,
         AdminService,
         PlantService
     ],
