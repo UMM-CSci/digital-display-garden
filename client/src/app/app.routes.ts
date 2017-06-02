@@ -14,7 +14,7 @@ export const routes: Routes = [
     { path: '', redirectTo: "/bed/all", pathMatch: 'full' },
     { path: 'bed', redirectTo: "/bed/all", pathMatch: 'full' },
     { path: 'bed/:id', component: GardenComponent },
-    { path: 'plant/:id', component: PlantComponent },
+    { path: 'plant/:bed/:id', component: PlantComponent },
     { path: 'adminj148iz5noq50aaq5', component: AdminComponent },
     { path: 'adminj148iz5noq50aaq5/importData', component: ImportComponent},
     { path: 'adminj148iz5noq50aaq5/exportData', component: ExportComponent},
