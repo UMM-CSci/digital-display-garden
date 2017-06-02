@@ -26,7 +26,7 @@ public class QRCodes {
     //http://javapapers.com/core-java/java-qr-code/
 
 
-    private static String qrTempPath = ".qrcode";
+    public static String qrTempPath = ".qrcode";
 
 
 
