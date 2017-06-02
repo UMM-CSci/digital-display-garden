@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class AdminComponent implements OnInit {
-    url : String = API_URL;
+    url : String = process.env.API_URL;
     constructor() {
 
     }
