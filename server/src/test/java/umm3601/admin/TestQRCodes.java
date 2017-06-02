@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +26,7 @@ import static umm3601.digitalDisplayGarden.QRCodes.*;
 public class TestQRCodes {
 
     String Test_Url = "http://localhost:2538" ;
-    String path = "test";
+    String path = "qrtest";
 
 
     @Test
@@ -106,8 +107,9 @@ public class TestQRCodes {
 
         File f = new File(this.path);
         String files[] = f.list();
+        Arrays.sort(files);
         for(int i = 0; i < files.length; i++)
-            assertEquals("File names are equal to the bed names", files[i], bedNames[i] + ".png");
+            assertEquals("File names aren't equal to the bed names", bedNames[i] + ".png", files[i]);
 
 
         // Writes it to the right path.
@@ -121,13 +123,19 @@ public class TestQRCodes {
     {
         try {
             //Delete temp folder holding QRCodes
+            File f = new File(path);
+            String files[] = f.list();
+            for (int i = 0; i < files.length; i++) {
+                Files.delete(Paths.get(path + "/" + files[i]));
+            }
+
             Path tempFolderPath = Paths.get(this.path);
             if (Files.exists(tempFolderPath))
                 Files.delete(tempFolderPath);
 
             //Delete QRCode zip file
-            File f = new File("./");
-            String files[] = f.list();
+            f = new File("./");
+            files = f.list();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].endsWith(".zip") && files[i].startsWith("QR Code Export"))
                     Files.delete(Paths.get(files[i]));

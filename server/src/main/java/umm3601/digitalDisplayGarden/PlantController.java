@@ -173,9 +173,6 @@ public class PlantController {
      */
     public long[] getPlantFeedbackByPlantId(String plantID, String gardenLocation, String uploadID) {
 
-        if (!ExcelParser.isValidUploadId(db, uploadID))
-            return null;
-
         Document filter = new Document();
         filter.put("commentOnPlant", plantID);
         filter.put("commentInBed", gardenLocation);
@@ -204,6 +201,7 @@ public class PlantController {
                     dislikes++;
             }
         }
+        else return null;
         long[] out = new long[3];
         out[PLANT_FEEDBACK_LIKES] = likes;
         out[PLANT_FEEDBACK_DISLIKES] = dislikes;
@@ -233,6 +231,9 @@ public class PlantController {
 
         //Get feedback then package it in a JSON(BSON) Document
         long[] metadataCount = getPlantFeedbackByPlantId(plantID, gardenLocation, uploadID);
+
+        if(metadataCount == null) //invalid gardenLocation or plantId
+            return "null";
 
         out.put("likeCount", metadataCount[0]);
         out.put("dislikeCount", metadataCount[1]);

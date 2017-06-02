@@ -29,7 +29,7 @@ public class TestPlantComment {
 
     @Test
     public void successfulInputOfComment() throws IOException {
-        String json = "{ plantId: \"16040.0\", comment : \"Here is our comment for this test\" }";
+        String json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
 
         assertTrue(plantController.storePlantComment(json, "second uploadId"));
 
@@ -44,6 +44,7 @@ public class TestPlantComment {
 
         assertEquals("Here is our comment for this test", fromDb.getString("comment"));
         assertEquals("16040.0", fromDb.get("commentOnPlant"));
+        assertEquals("7.0", fromDb.get("commentInBed"));
         assertEquals("second uploadId", fromDb.get("uploadId"));
     }
 
@@ -51,11 +52,11 @@ public class TestPlantComment {
     public void failedInputOfComment() throws IOException {
         MongoCollection<Document> commentDocuments = testDB.getCollection("comments");
 
-        String json = "{ plantId: \"58d1c36efb0cac4e15afd27\", comment : \"Here is our comment for this test\" }";
+        String json = "{ plantId: \"58d1c36efb0cac4e15afd27\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
         assertFalse("Added a comment for a plant that doesn't exist", plantController.storePlantComment(json, "second uploadId"));
         assertEquals("Added a comment for a plant that doesn't exist", 0, commentDocuments.count());
 
-        json = "{ plantId: \"16040.0\", comment : \"Here is our comment for this test\" }";
+        json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
         assertFalse("Added a comment for an invalid uploadId", plantController.storePlantComment(json, "invalid uploadId"));
         assertEquals("Added a comment for a plant that doesn't exist", 0, commentDocuments.count());
 
@@ -68,6 +69,11 @@ public class TestPlantComment {
         assertEquals("Added a comment without corresponding plant", 0, commentDocuments.count());
 
         json = "{ plantId: \"16040.0\" }";
+        assertFalse( "Added a comment without an actual comment", plantController.storePlantComment(json, "second uploadId"));
+        assertEquals("Added a comment without an actual comment", 0, commentDocuments.count());
+
+
+        json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\" }";
         assertFalse( "Added a comment without an actual comment", plantController.storePlantComment(json, "second uploadId"));
         assertEquals("Added a comment without an actual comment", 0, commentDocuments.count());
 
