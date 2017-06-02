@@ -2,7 +2,7 @@
 Instructions on deploying this project in production mode.
 
 ## Pre-Deploy  
-1.  Make sure tests pass locally on server and client via *intelliJ*  
+1. Make sure tests pass locally on server and client via *Gradle*  
 2. Build and run the project locally with `./buildAndLaunchProject.sh`(**Not on the droplet**)  
   *  `cd` into the project directory
   * `chmod+x buildAndLaunchProject.sh`
@@ -27,17 +27,17 @@ The problem is that a lot of our tests use substantial amounts of memory, and be
 
 `free -h` again and you should see that your swap memory should have gone from 3gb to 6gb.   
 
-### Changing IP's and Keys:
+### Create config and authentication files for Server
+Wherever you run the server, the relative directory (?) is supposed to house a file named `config.properties` and `authorized.users`. Examples of how these two config files look can be found in the `/server/` folder in this project. More information about these files can be found in [ServerConfiguration.md](./ServerConfiguration.md) 
+
+### Changing IP's and Keys in Client:
 Several places in our code refer to `localhost`, and that might cause problems when deploying for public use. Change the following files to point to the right places.
 
 #### Client - Webpack file:
 *   `webpack.prod.js` : change `localhost` to the correct IP address.
-Due to *https*, for us, this is `'https://revolverenguardia.dungeon.website/api/'`
-
+Due to *https*, this would be `'https://public.url/api/'`
 #### Client - `google-charts-component.html`   
-In `google-charts-component.html`, we grab an image from the server to use as a background for the bubble chart. When running locally, we tell it to go to `localhost`, but for deployment, we need to change this to the correct IP address.  
-#### Server - `Server.java`  
-For our QR Codes to link to the proper URL's, they need to know the IP address of the client. Before running, go to `Server.java`, and change the variable `API_URL` to equal `"http://[YOUR_IP_ADDRESS]":2538`.   
+In `google-charts-component.html`, we grab an image from the server to use as a background for the bubble chart. When running locally, we tell it to go to `localhost`, but for deployment, we need to change this to the correct IP address.     
 #### Changing API Key - `index.html` (If you are using google-maps)
 In previous versions of our product, we have used google maps. If you would like to use google maps, you need an *API Key*.
 Because we never commit and push our **API Key**, we need to add it before deployment. You can generate an API key for google maps [here](https://developers.google.com/maps/documentation/javascript/get-api-key).
