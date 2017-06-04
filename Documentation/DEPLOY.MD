@@ -28,7 +28,12 @@ The problem is that a lot of our tests use substantial amounts of memory, and be
 `free -h` again and you should see that your swap memory should have gone from 3gb to 6gb.   
 
 ### Create config and authentication files for Server
-Wherever you run the server, the relative directory (?) is supposed to house a file named `config.properties` and `authorized.users`. Examples of how these two config files look can be found in the `/server/` folder in this project. More information about these files can be found in [ServerConfiguration.md](./ServerConfiguration.md) 
+You should have `config.properties` `config.properties.deployment` and `authorized.users`.
+
+Looking at the project you should see `example.authorized.users` and `example.config.properties`. Make these configuration files within that same directory. When you run the `buildAndLaunchProject.sh` script, `authorized.users` and `config.properties.deployment` will be soft linked into the appropriate places.
+
+`config.properties` (without the `.deployment`) is the configuration used in the testing environment, `config.properties.deployment` is used when built in production.
+More information about these files can be found in [ServerConfiguration.md](./ServerConfiguration.md)
 
 ### Changing IP's and Keys in Client:
 Several places in our code refer to `localhost`, and that might cause problems when deploying for public use. Change the following files to point to the right places.
