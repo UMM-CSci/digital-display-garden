@@ -1,8 +1,6 @@
-# :movie_camera: :es: *Revolver En Guardia++* :es: :movie_camera:  
-[![Build Status](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1.svg?branch=master)](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)   We are *Revolver En Guardia++* :es: :movie_camera:!  
-[![IMAGE ALT TEXT HERE](Documentation/Graphics/RevolverEnGuardia.png)](https://youtu.be/Szy2T0uHCU0)   
-
- We were approached by the West Central Research Outreach Center (WCROC) in Morris Minnesota, to design software that would enhance visitor experience at their horticulture gardens, and provide feedback for WCROC. The Digital Display Garden allows visitors to learn more about the garden, and leave feedback for garden staff, all in a non-obtrusive, low footprint way that doesn't take away from aesthetics of the garden.  
+# Digital Display Garden
+[![Build Status](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1.svg?branch=master)](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)  
+This is a project for the West Central Research Outreach Center (WCROC) in Morris Minnesota, to design software that would enhance visitor experience at their horticulture gardens, and provide feedback for WCROC. The Digital Display Garden allows visitors to learn more about the garden, and leave feedback for garden staff, all in a non-obtrusive, low footprint way that doesn't take away from aesthetics of the garden.  
  
 Visitors can access the Digital Display Garden via QR Codes located at each bed. From there, visitors can rate, comment, and view information about the garden. Meanwhile, WCROC staff, can track when and where in the garden people are viewing, liking, and commenting on plants through interactive graphics, and exportable spreadsheets.  
  
@@ -10,26 +8,8 @@ In addition, The Digital Display Garden was designed with low maintenance in min
   
 The Digital Display Garden is due to enter service in the WCROC garden, during summer 2017, and will be further developed to improve visitor and staff experience alike. This project is made possible by the students, and faculty of C-SCI 3601, *Software Development and Design*, at University of Minnesota Morris, and by the staff of the West Central Research Outreach Center.
 
-
-Software Design S2017, Iteration 4, Team _Revolver en Guardia++_  
 You can find our website [here](http://revolverenguardia.dungeon.website)  
 Our IP address is: 138.197.120.23
-
-Our Groups team members are:
-* Skye Antinozzi (Skyebug)
-* Dan Frazier (danfrz)
-* Brian Caravantes (carav008)
-* Ai Sano (sanox013)
-* Andy Hong Lau (tszhonglau)
-* Spencer Hammersten (hamme503)
-* RJ Holman (holma198)
-* Lenny Scott (morrislenny)
-
-This repository is a mirror of [Iteration 3 , Team  Revolver En Guardia](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)
-which is a fork from [Iteration 2 , Team _Grimaldi_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-2-grimaldi.git)
-which is a fork from [Iteration 1 , Team _Claude Arabo_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-1-claudearabo).
-and substantially incorporates code from [Iteration 2 , Team _Oman Anwar_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-2-omaranwar.git)
-
 
 ## Digital Display Garden: Visitor View
 ![IMAGE ALT TEXT HERE](Documentation/Graphics/DigitalDisplayGarden.png)
@@ -39,8 +19,9 @@ and substantially incorporates code from [Iteration 2 , Team _Oman Anwar_](https
 
 
 ## Documentation  
-We have an entire folder full of thorough documentation!  
-* [Development Instructions](/Documentation/Development.md):Explains how to run the project in Development as well as how to simulate running in Production. 
+We have an entire folder full of thorough documentation!
+* [Development Instructions](/Documentation/Development.md): Explains how to run the project in Development as well as how to simulate running in Production.
+* [Server Configuration](/Documentation/ServerConfiguration.md): 
 * [Deployment Instructions](/Documentation/DEPLOY.MD): Explains how to start up the project on digital ocean.  
 * [Google-Charts](/Documentation/Google-Charts.md): Walks through how we implement Google Charts in Angular 2.  
 * [ExcelParser](/Documentation/ExcelParser.md): Explains how the cloud-arabo and Grimaldi iterations parse excel spreadsheets. This wil be updated to reflect how Revolver En Guardia uses `ExcelParser.java`  
@@ -82,5 +63,12 @@ We have an entire folder full of thorough documentation!
 [whats-webpack]: https://webpack.github.io/docs/what-is-webpack.html
 [bootstrap]: https://getbootstrap.com/components/
 [mongo-jdbc]: https://docs.mongodb.com/ecosystem/drivers/java/  
+
+This repository is a fork from [Iteration 4 , Team  Revolver En Guardia++](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)
+which is a mirror of [Iteration 3 , Team  Revolver En Guardia](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-3)
+which is a fork from [Iteration 2 , Team _Grimaldi_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-2-grimaldi.git)
+which is a fork from [Iteration 1 , Team _Claude Arabo_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-1-claudearabo).
+and substantially incorporates code from [Iteration 2 , Team _Oman Anwar_](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-2-omaranwar.git)
+and [Iteration 4 , Dorfner v2](https://github.com/UMM-CSci-3601-S17/digital-display-garden-iteration-4-dorfner-v2.git)
 
 :octopus::fork_and_knife::rice::sushi:
