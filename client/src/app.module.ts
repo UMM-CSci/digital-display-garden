@@ -15,14 +15,20 @@ import { CommonNameDropdownComponent } from "./app/garden/components/common_name
 import { PlantListService } from "./app/garden/components/plant_list/src/plant-list.service";
 import { BedDropdownService } from "./app/garden/components/bed_dropdown/src/bed-dropdown.service";
 import { CommonNameDropdownService } from "./app/garden/components/common_name_dropdown/src/common-name-dropdown.service";
-import { AdminComponent } from "./app/admin/admin.component";
+
+import { AdminComponent } from "./app/admin/src/admin.component";
+import {SlowLoginComponent} from "./app/admin/authentication/slow-login.component";
+import {AuthGuard} from "./app/admin/authentication/auth-guard";
+import {IncorrectAccountComponent} from "./app/admin/authentication/incorrect-account.component";
+
+
 import { PlantComponent } from "./app/garden/components/plant_list/src/plant.component";
-import { ImportComponent } from "./app/admin/import.component";
-import { AdminService } from "./app/admin/admin.service";
-import { ExportComponent } from "./app/admin/export.component";
-import { FileUploadComponent } from "./app/admin/file-upload.component";
+import { ImportComponent } from "./app/admin/src/import.component";
+import { AdminService } from "./app/admin/src/admin.service";
+import { ExportComponent } from "./app/admin/src/export.component";
+import { FileUploadComponent } from "./app/admin/src/file-upload.component";
 import { PlantService } from "./app/garden/components/plant_list/src/plant.service";
-import { GraphComponent } from "./app/admin/google-charts.component";
+import { GraphComponent } from "./app/admin/src/google-charts.component";
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 import { FilterGardenComponent } from "./app/garden/components/filter_garden_sidebar/src/filter-garden.component";
@@ -56,6 +62,8 @@ import { RouterModule } from "@angular/router";
         FileUploadComponent,
         FooterComponent,
         GraphComponent,
+        IncorrectAccountComponent,
+        SlowLoginComponent,
 
     ],
     providers: [
@@ -63,7 +71,9 @@ import { RouterModule } from "@angular/router";
         BedDropdownService,
         CommonNameDropdownService,
         AdminService,
-        PlantService
+        PlantService,
+        {provide: 'CanAlwaysActivateGuard', useClass: AuthGuard},
+        AuthGuard,
     ],
     bootstrap: [ AppComponent ]
 })
