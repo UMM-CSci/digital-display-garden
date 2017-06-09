@@ -206,17 +206,19 @@ public class Server {
         });
 
         //Get a plant by plantId
-        get("api/plant/:plantID", (req, res) -> {
+        get("api/plant/:bed/:plantID", (req, res) -> {
             res.type("application/json");
             String id = req.params("plantID");
-            return plantController.getPlantByPlantID(id, getLiveUploadId());
+            String bed = req.params("bed");
+            return plantController.getPlantByPlantID(id, bed, getLiveUploadId());
         });
 
         //Get feedback counts for a plant
-        get("api/plant/:plantID/counts", (req, res) -> {
+        get("api/plant/:bed/:plantID/counts", (req, res) -> {
             res.type("application/json");
             String id = req.params("plantID");
-            return plantController.getPlantFeedbackByPlantIdJSON(id,getLiveUploadId());
+            String bed = req.params("bed");
+            return plantController.getPlantFeedbackByPlantIdJSON(id, bed, getLiveUploadId());
         });
 
         //List all Beds

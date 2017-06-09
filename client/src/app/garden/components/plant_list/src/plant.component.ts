@@ -56,12 +56,12 @@ export class PlantComponent implements OnInit {
     ngOnInit(): void {
         // Get the actual plant
         this.route.params
-            .switchMap((params: Params) => this.plantService.getPlantById(params['id']))
+            .switchMap((params: Params) => this.plantService.getPlantById(params['id'], params['bed']))
             .subscribe(plant => this.plant = plant);
 
         // Get the feedback data for the plant
         this.route.params
-            .switchMap((params: Params) => this.plantService.getFeedbackForPlantByPlantID(params['id']))
+            .switchMap((params: Params) => this.plantService.getFeedbackForPlantByPlantID(params['id'], params['bed']))
             .subscribe((plantFeedback: PlantFeedback) => this.plantFeedback = plantFeedback);
     }
 
@@ -72,7 +72,7 @@ export class PlantComponent implements OnInit {
     public rate(rating: boolean): void {
         if (!this.rated) {
             this.ratingInTransit = true;
-            this.plantService.ratePlant(this.plant.id, rating)
+            this.plantService.ratePlant(this.plant.id, this.plant.gardenLocation, rating)
                 .subscribe(succeeded => {
                     this.rated = succeeded;
                     this.requestFeedbackFromServer();
@@ -88,7 +88,7 @@ export class PlantComponent implements OnInit {
     public comment(comment: string): void {
         if (!this.commented) {
             if (comment != null) {
-                this.plantService.commentPlant(this.plant.id, comment)
+                this.plantService.commentPlant(this.plant.id, this.plant.gardenLocation, comment)
                     .subscribe(succeeded => this.commented = succeeded)
                 this.commented = true;
             }
@@ -100,7 +100,7 @@ export class PlantComponent implements OnInit {
      */
     private requestFeedbackFromServer(): void {
         this.route.params
-            .switchMap((params: Params) => this.plantService.getFeedbackForPlantByPlantID(params['id']))
+            .switchMap((params: Params) => this.plantService.getFeedbackForPlantByPlantID(params['id'], params['bed']))
             .subscribe((plantFeedback: PlantFeedback) => this.plantFeedback = plantFeedback);
     }
 
