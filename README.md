@@ -1,11 +1,12 @@
 # Digital Display Garden
 [![Build Status](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1.svg?branch=master)](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)  
+
 This is a project for the West Central Research Outreach Center (WCROC) in Morris Minnesota, to design software that would enhance visitor experience at their horticulture gardens, and provide feedback for WCROC. The Digital Display Garden allows visitors to learn more about the garden, and leave feedback for garden staff, all in a non-obtrusive, low footprint way that doesn't take away from aesthetics of the garden.  
- 
+
 Visitors can access the Digital Display Garden via QR Codes located at each bed. From there, visitors can rate, comment, and view information about the garden. Meanwhile, WCROC staff, can track when and where in the garden people are viewing, liking, and commenting on plants through interactive graphics, and exportable spreadsheets.  
- 
+
 In addition, The Digital Display Garden was designed with low maintenance in mind. WCROC staff can populate the website by uploading a single excel spreadsheet that they already use to keep track of plants into our Admin console. From there, they can change what data the Digital Display Garden is working from, by uploading a corrected spreadsheet using our update function. Getting the correct QR codes for each bed in the garden is a simple as using our *Download QR Codes* feature, that downloads a zipped folder containing all the QR codes needed for the garden. They can regularly view real time data about the garden by using our charts feature, or can download an excel spreadsheet with complete data from all of the garden.   
-  
+
 The Digital Display Garden is due to enter service in the WCROC garden, during summer 2017, and will be further developed to improve visitor and staff experience alike. This project is made possible by the students, and faculty of C-SCI 3601, *Software Development and Design*, at University of Minnesota Morris, and by the staff of the West Central Research Outreach Center.
 
 You can find our website [here](http://revolverenguardia.dungeon.website)  
@@ -21,7 +22,7 @@ Our IP address is: 138.197.120.23
 ## Documentation  
 We have an entire folder full of thorough documentation!
 * [Development Instructions](/Documentation/Development.md): Explains how to run the project in Development as well as how to simulate running in Production.
-* [Server Configuration](/Documentation/ServerConfiguration.md): 
+* [Server Configuration](/Documentation/ServerConfiguration.md):
 * [Deployment Instructions](/Documentation/DEPLOY.MD): Explains how to start up the project on digital ocean.  
 * [Google-Charts](/Documentation/Google-Charts.md): Walks through how we implement Google Charts in Angular 2.  
 * [ExcelParser](/Documentation/ExcelParser.md): Explains how the cloud-arabo and Grimaldi iterations parse excel spreadsheets. This wil be updated to reflect how Revolver En Guardia uses `ExcelParser.java`  
@@ -34,10 +35,10 @@ We have an entire folder full of thorough documentation!
 
 ## Libraries used
 ### Client-Side
-* **Angular 2** 
+* **Angular 2**
 * **TypeScript** is the language mostly used on the client side
 * **Jasmine** and **Karma**
-* **Gradle** is used to tell **Yarn** to orchestrate the client side 
+* **Gradle** is used to tell **Yarn** to orchestrate the client side
 
 ### Server-Side
 * **Java** is the language used on the server side
@@ -46,7 +47,7 @@ We have an entire folder full of thorough documentation!
 * **Apache** is used for importing and exporting data in .xlsx format
 * **zxing** is used for generating QR codes (supports reading them if we want)
 * **joda** is used for making an unique LiveUploadID
-* **Gradle** is used to build the project 
+* **Gradle** is used to build the project
 
 ## Resources
 
