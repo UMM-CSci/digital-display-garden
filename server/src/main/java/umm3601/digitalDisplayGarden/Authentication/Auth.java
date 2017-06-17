@@ -450,7 +450,7 @@ public class Auth {
 //                    System.out.println("Target: " + changed.toString());
 
                     if (changed.toString().equals("authorized.users")) {
-                        if(event.kind().equals(ENTRY_CREATE) || event.kind().equals(ENTRY_MODIFY))
+                        if(event.kind().equals(ENTRY_CREATE))
                             System.out.println("Authorized Users file has changed.");
                             try {
                                 readAuthenticatedUsers(new FileInputStream("authorized.users"));
