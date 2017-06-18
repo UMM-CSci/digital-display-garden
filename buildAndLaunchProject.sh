@@ -15,9 +15,7 @@ sleep 1
 AUTH_USERS_PATH="`pwd`/server/authorized.users"
 DEPLOYMENT_CONFIG_PATH="`pwd`/server/config.properties.deployment"
 
-#If you want authorized.users as a soft-link, the java WatchService
-#will consider it as "authorized.users~" and will not automatically update
-ln "$AUTH_USERS_PATH" ~/server/authorized.users
+ln -s "$AUTH_USERS_PATH" ~/server/authorized.users
 ln -s "$DEPLOYMENT_CONFIG_PATH" ~/server/config.properties
 
 #Run the server
