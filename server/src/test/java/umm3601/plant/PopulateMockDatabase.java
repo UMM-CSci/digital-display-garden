@@ -381,17 +381,17 @@ public class PopulateMockDatabase {
         BsonArray mockVisits = new BsonArray();
         BsonDocument docV1 = new BsonDocument();
 
-        docV1.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-20T05:34:59Z")).getTime()));
+        docV1.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-02-20T05:34:59Z")).getTime()));
         mockVisits.add(docV1);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV2 = new BsonDocument();
-        docV2.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-22T05:34:02Z")).getTime()));
+        docV2.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-02-22T05:34:02Z")).getTime()));
         mockVisits.add(docV2);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV3 = new BsonDocument();
-        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-05-30T14:47:03Z")).getTime()));
+        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-06-30T14:47:03Z")).getTime()));
         mockVisits.add(docV3);
 
         metadataDoc9.append("visits", mockVisits);
