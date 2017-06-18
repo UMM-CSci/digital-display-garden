@@ -5,6 +5,8 @@ import com.mongodb.client.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.bson.conversions.Bson;
+
+import java.util.Date;
 import java.util.Iterator;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Projections.include;
@@ -61,6 +63,7 @@ public class BedController {
 
         Document visit = new Document();
         visit.append("visit", new ObjectId());
+        visit.append("date", new Date());
 
         incrementBedMetadata(gardenLocation, "pageViews", uploadId);
 
@@ -84,10 +87,10 @@ public class BedController {
         filterDoc.append("uploadId", uploadId);
 
         Document visit = new Document();
-        visit.append("visit", new ObjectId());
+        visit.append("visit", new Date());
 
         Document scan = new Document();
-        scan.append("scan", new ObjectId());
+        scan.append("scan", new Date());
 
         incrementBedMetadata(gardenLocation, "pageViews", uploadId);
         incrementBedMetadata(gardenLocation, "qrScans", uploadId);

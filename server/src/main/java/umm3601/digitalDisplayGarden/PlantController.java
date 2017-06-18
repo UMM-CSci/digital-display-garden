@@ -356,9 +356,9 @@ public class PlantController {
         filterDoc.append("gardenLocation", gardenLocation);
         filterDoc.append("uploadId", uploadId);
 
-        //Add a {visit : ObjectId} to the visits array
+        //Add a {visit : Date} to the visits array
         Document visit = new Document();
-        visit.append("visit", new ObjectId());
+        visit.append("visit", new Date());
 
         return null != plantCollection.findOneAndUpdate(filterDoc, push("metadata.visits", visit));
     }
@@ -381,6 +381,7 @@ public class PlantController {
      */
 
     public boolean storePlantComment(String json, String uploadID) {
+        Date now = new Date();
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return false;
 
@@ -403,11 +404,11 @@ public class PlantController {
                     Document plantDoc = iterator.next();
                     toInsert.put("commentOnPlant", plantDoc.getString("id"));
                     toInsert.put("commentInBed", plantDoc.getString("gardenLocation"));
+                    toInsert.put("date", now);
                 } else {
                     System.err.println("Was passed malformed storePlantComment request");
                     return false;
                 }
-//                toInsert.put("liveUploadId", uploadID);
 
             } else {
                 System.err.println("storePlantComment request does not contain plantId");
@@ -445,7 +446,6 @@ public class PlantController {
      * @param uploadID Dataset to find the plant
      * @return true iff the operation succeeded.
      */
-
     public boolean addFlowerRating(String plantId, String gardenLocation, boolean like, String uploadID) {
 
         if (!ExcelParser.isValidUploadId(db, uploadID))
@@ -468,9 +468,10 @@ public class PlantController {
             return false;
         }
 
-        //Push a new {like : bool, ratingOnObjectOfId : ObjectId} to metadata.ratings for this plant
+        //Push a new {like : bool, date : Date, ratingOnObjectOfId : ObjectId} to metadata.ratings for this plant
         Document rating = new Document();
         rating.append("like", like);
+        rating.append("date", new Date());
         rating.append("ratingOnObjectOfId", new ObjectId(plantOID.get("_id").toString()));
 
         return null != plantCollection.findOneAndUpdate(filterDoc, push("metadata.ratings", rating));

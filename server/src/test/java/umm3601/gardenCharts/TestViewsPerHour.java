@@ -61,6 +61,7 @@ public class TestViewsPerHour{
          */
 
         String string = gardenCharts.getPlantViewsPerHour("googleCharts uploadId");
+        System.out.println(string);
         JsonArray json = TestUTILS.stringToJSONArray(string);
 
         ArrayList<Object> arrayList = TestUTILS.JSONArrayToArrayList(json);

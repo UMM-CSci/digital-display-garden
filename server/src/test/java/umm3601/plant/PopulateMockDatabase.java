@@ -16,6 +16,8 @@ import umm3601.digitalDisplayGarden.PlantController;
 
 import javax.print.Doc;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -51,6 +53,7 @@ public class PopulateMockDatabase {
             bed10Meta.append("qrScans", 0);
             bed10Meta.append("bedVisits", new BsonArray());
             bed10Meta.append("qrVisits", new BsonArray());
+            bed10Meta.append("date", new Date());
 
             bed10.append("uploadId", "first uploadId");
             bed10.append("metadata", bed10Meta);
@@ -126,10 +129,12 @@ public class PopulateMockDatabase {
             bed7Meta.append("qrScans", 0);
             bed7Meta.append("bedVisits", new BsonArray());
             bed7Meta.append("qrVisits", new BsonArray());
+            bed7Meta.append("date", new Date());
 
             bed7.append("uploadId", "second uploadId");
             bed7.append("metadata", bed7Meta);
             beds.insertOne(bed7);
+
         }
         {
             Document bed12 = new Document();
@@ -198,10 +203,12 @@ public class PopulateMockDatabase {
             bed20Meta.append("qrScans", 0);
             bed20Meta.append("bedVisits", new BsonArray()); //TODO should have 10 {visit : objectId}'s in here but for the test I'm writing rn don't need
             bed20Meta.append("qrVisits", new BsonArray());
+            bed20Meta.append("date", new Date());
 
             bed20.append("uploadId", "third uploadId");
             bed20.append("metadata", bed20Meta);
             beds.insertOne(bed20);
+
         }
 
         //for testing getCommonNamesJSON (third uploadID)
@@ -270,6 +277,7 @@ public class PopulateMockDatabase {
             bed5Meta.append("qrScans", 0);
             bed5Meta.append("bedVisits", new BsonArray()); //TODO should have 10 {visit : objectId}'s in here but for the test I'm writing rn don't need
             bed5Meta.append("qrVisits", new BsonArray());
+            bed5Meta.append("date", new Date());
 
             bed5.append("uploadId", "googleCharts uploadId");
             bed5.append("metadata", bed5Meta);
@@ -327,10 +335,7 @@ public class PopulateMockDatabase {
 
         BsonArray bed8Visits = new BsonArray();
         BsonDocument docV8 = new BsonDocument();
-        Date p8Date1 = new Date(2017 + 6, 0, 5,18,18,02);
-        ObjectId p8Obj1 = new ObjectId(p8Date1);
-        System.out.println("ID: 16053.0 | Date: " + p8Obj1.getDate());
-        docV8.append("visit",new BsonObjectId(new ObjectId(p8Date1)));
+        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-05T18:18:02Z")).getTime()));
         bed8Visits.add(docV8);
         metadataDoc8.append("visits", bed8Visits);
 
@@ -354,44 +359,39 @@ public class PopulateMockDatabase {
         BsonDocument doc = new BsonDocument();
         doc.append("like",new BsonBoolean(false));
         doc.append("ratingOnObjectId",new BsonObjectId(new ObjectId("58f03f9aad21334329e73859")));
+        doc.append("date", new BsonDateTime(new Date().getTime()));
         b.add(doc);
         metadataDoc9.append("ratings", b);
 
         BsonDocument doc1 = new BsonDocument();
         doc1.append("like",new BsonBoolean(true));
         doc1.append("ratingOnObjectId",new BsonObjectId(new ObjectId("58f03f9aad21334329e73860")));
+        doc1.append("date", new BsonDateTime(new Date().getTime()));
         b.add(doc1);
         metadataDoc9.append("ratings", b);
 
         BsonDocument doc2 = new BsonDocument();
         doc2.append("like",new BsonBoolean(true));
         doc2.append("ratingOnObjectId",new BsonObjectId(new ObjectId("58f03f9aad21334329e73861")));
+        doc2.append("date", new BsonDateTime(new Date().getTime()));
         b.add(doc2);
         metadataDoc9.append("ratings", b);
 
 
         BsonArray mockVisits = new BsonArray();
         BsonDocument docV1 = new BsonDocument();
-        Date p9Date1 = new Date(2017 + 6, 1, 20, 5, 34, 59);
-        ObjectId objID2 = new ObjectId(p9Date1);
-        System.out.println("ID: 16037.0 | Date: " + objID2.getDate());
-        docV1.append("visit",new BsonObjectId(objID2));
+
+        docV1.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-20T05:34:59Z")).getTime()));
         mockVisits.add(docV1);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV2 = new BsonDocument();
-        Date p9Date2 = new Date(2017 + 6, 1,22,5,34, 2);
-        ObjectId objID3 = new ObjectId(p9Date2);
-        System.out.println("ID: 16037.0 | Date: " + objID3.getDate());
-        docV2.append("visit",new BsonObjectId(objID3));
+        docV2.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-22T05:34:02Z")).getTime()));
         mockVisits.add(docV2);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV3 = new BsonDocument();
-        Date p9Date4 = new Date(2017 + 6, 5, 30, 14, 47,3);
-        ObjectId objID4 = new ObjectId(p9Date4);
-        System.out.println("ID: 16037.0 | Date: " + objID4.getDate());
-        docV3.append("visit",new BsonObjectId(objID4));
+        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-05-30T14:47:03Z")).getTime()));
         mockVisits.add(docV3);
 
         metadataDoc9.append("visits", mockVisits);
