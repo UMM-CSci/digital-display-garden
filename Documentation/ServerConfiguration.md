@@ -67,6 +67,11 @@ with `/callback` on the end. For example, our production mode publicURL would be
 This is the name of the local MongoDB database that the program uses for
 storing all its data.
 
+##### timezone
+
+This is the default local time zone for the server to use. This should be the time zone used by the administrators of the garden.
+
+If a timezone is not provided, the default timezone of the machine should be used.
 
 ## Example config.properties file
 
@@ -76,14 +81,23 @@ Here is an example of what such a `config.properties` file would look like:
 # Make sure there is no trailing white space at the end of any lines
 # Server Port
 serverPort=2538
+
 # Google OAuth2.0 Client ID
 clientID=VNN7GhHj8fhr5g3VLWhtQuBW9sc9FfRqUQFW8dqYkFMQ.apps.googleusercontent.com
+
 # Google OAuth2.0 Client Secret
 clientSecret=sNj2DaUEUaa_d25jrNUrwBX
+
 # The public URL of the website
 publicURL=http://localhost:9000
+
 # The callback URL of the website
 callbackURL=http://localhost:2538/callback
+
 # The Mongo database name
 databaseName=test
+
+# Time zone for displaying dates properly (mostly admin charts)
+# For valid time zones see https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html#SHORT_IDS
+timezone=America/Chicago
 ```
