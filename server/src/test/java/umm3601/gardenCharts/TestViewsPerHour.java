@@ -39,7 +39,7 @@ public class TestViewsPerHour{
         testUtils TestUTILS = new testUtils();
 
 
-            //Will use the mock database with the inputed upload id and track the hour the plant was visited
+        //Will use the mock database with the inputed upload id and track the hour the plant was visited
 
         //System.out.println(gardenCharts.getPlantViewsPerHour("googleCharts uploadId"));
         //[["Hour","Views"],["0",0],["1",0],["2",0],["3",0],["4",0],["5",0],["6",0],["7",0],["8",0],["9",0],["10",0],["11",0],["12",0],["13",0],["14",0],["15",0],["16",0],["17",0],["18",0],["19",1],["20",0],["21",0],["22",3],["23",0]]
@@ -61,11 +61,10 @@ public class TestViewsPerHour{
          */
 
         String string = gardenCharts.getPlantViewsPerHour("googleCharts uploadId");
-        System.out.println(string);
         JsonArray json = TestUTILS.stringToJSONArray(string);
 
         ArrayList<Object> arrayList = TestUTILS.JSONArrayToArrayList(json);
-
+        System.out.println(arrayList);
         Object object1 = arrayList.get(12).toString();
         Object object2 = arrayList.get(20).toString();
         Object object3 = arrayList.get(1).toString();

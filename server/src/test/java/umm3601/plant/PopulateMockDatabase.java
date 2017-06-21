@@ -335,9 +335,10 @@ public class PopulateMockDatabase {
 
         BsonArray bed8Visits = new BsonArray();
         BsonDocument docV8 = new BsonDocument();
-        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-01-05T18:18:02Z")).getTime()));
+        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2017-08-01T05:42:18Z")).getTime()));
         bed8Visits.add(docV8);
         metadataDoc8.append("visits", bed8Visits);
+        System.out.println(Date.from(Instant.parse("2017-08-01T05:42:18Z")));
 
         plantEight.append("metadata", metadataDoc8);
         plants.insertOne(plantEight);
@@ -381,17 +382,19 @@ public class PopulateMockDatabase {
         BsonArray mockVisits = new BsonArray();
         BsonDocument docV1 = new BsonDocument();
 
-        docV1.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-02-20T05:34:59Z")).getTime()));
+        docV1.append("visit", new BsonDateTime(Date.from(Instant.parse("2017-09-15T16:59:15Z")).getTime()));
         mockVisits.add(docV1);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV2 = new BsonDocument();
-        docV2.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-02-22T05:34:02Z")).getTime()));
+        docV2.append("visit", new BsonDateTime(Date.from(Instant.parse("2017-09-17T16:58:18Z")).getTime()));
+        System.out.println(Date.from(Instant.parse("2017-09-17T16:58:18Z")));
         mockVisits.add(docV2);
         metadataDoc9.append("visits", mockVisits);
 
         BsonDocument docV3 = new BsonDocument();
-        docV8.append("visit", new BsonDateTime(Date.from(Instant.parse("2023-06-30T14:47:03Z")).getTime()));
+        docV3.append("visit", new BsonDateTime(Date.from(Instant.parse("2018-01-24T01:11:19Z")).getTime()));
+        System.out.println(Date.from(Instant.parse("2018-01-24T01:11:19Z")));
         mockVisits.add(docV3);
 
         metadataDoc9.append("visits", mockVisits);
