@@ -68,13 +68,10 @@ public class TestBedController {
 
         Document visits = bedVisits.get(0);
         //System.out.println(visits.get("visit"));
-        ObjectId objectId = new ObjectId();
-
         String v = visits.get("visit").toString();
 
         //checking to see that the type of visit is an of type/structure of ObjectID
-        assertEquals("they should both be of type org.bson.types.ObjectId ",objectId.getClass().getName(),visits.get("visit").getClass().getName());
-        assertEquals("the object id produced from a visit must be 24 characters",24,v.length());
+        assertEquals("they should both be of type Date ",Date.class.getName(), visits.get("visit").getClass().getName());
 
     }
 
