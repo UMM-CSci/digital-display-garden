@@ -3,7 +3,6 @@ package umm3601.digitalDisplayGarden;
 
 import com.mongodb.client.*;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.bson.conversions.Bson;
 
 import java.util.Date;
@@ -62,8 +61,7 @@ public class BedController {
         filterDoc.append("uploadId", uploadId);
 
         Document visit = new Document();
-        visit.append("visit", new ObjectId());
-        visit.append("date", new Date());
+        visit.append("visit", new Date());
 
         incrementBedMetadata(gardenLocation, "pageViews", uploadId);
 

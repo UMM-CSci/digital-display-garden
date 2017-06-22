@@ -589,7 +589,7 @@ public class PlantController {
                 dataToWrite[COL_CMT_CULTIVAR] = onPlant.getString("cultivar");
                 dataToWrite[COL_CMT_GRDNLOC] = onPlant.getString("gardenLocation");
                 dataToWrite[COL_CMT_COMMENT] = comment.getString("comment");
-                dataToWrite[COL_CMT_DATE] = ((ObjectId) comment.get("_id")).getDate().toString();
+                dataToWrite[COL_CMT_DATE] = comment.get("date").toString();
 
                 feedbackWriter.writeToSheet(dataToWrite, FeedbackWriter.SHEET_COMMENTS);
             } catch (Exception e) {
