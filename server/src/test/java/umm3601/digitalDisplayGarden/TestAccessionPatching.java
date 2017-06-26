@@ -32,7 +32,7 @@ public class TestAccessionPatching
     public void clearAndPopulateDatabase() throws IOException {
         mongoClient.dropDatabase(databaseName);
         testDB = mongoClient.getDatabase(databaseName);
-        InputStream fromFile = this.getClass().getResourceAsStream("/Test_PatchingAccession2016.xlsx");
+        InputStream fromFile = this.getClass().getResourceAsStream("/Test_Accession2016.xlsx");
         parser = new ExcelParser(fromFile, testDB);
 
     }
