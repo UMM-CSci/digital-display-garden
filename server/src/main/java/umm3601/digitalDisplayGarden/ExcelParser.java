@@ -351,6 +351,7 @@ public class ExcelParser {
             bedCollection.findOneAndUpdate(newBedFilter,set("metadata", oldMetadata));
         }
 
+        clearUpload(oldUploadId, database);
         setLiveUploadId(newUploadId, database);
     }
 
