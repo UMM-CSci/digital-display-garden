@@ -1,10 +1,17 @@
 <div *ngIf="this.authorized" class="export-page">
     <h2>Export Feedback</h2>
 
+    <p>
+        * When you <strong>Import</strong> an accession list spreadsheet, an entry will be added with the date it is added.<br>
+        * When you <strong>Patch</strong> an accession list spreadsheet, the last entry's date will be changed to the
+        date that the patch was made and any feedback for that will persist.<br>
+        * Any new comments or feedback made by users will apply to the <strong>last entry</strong> in the list below.<br>
+    </p>
+
     <ul class="list-group">
         <li class="row list-group-item">
             <div class="col-sm-2">
-                Data Set
+                Date of Import or last Patch
             </div>
         </li>
         <li *ngFor="let uploadId of uploadIds" class="row list-group-item">
