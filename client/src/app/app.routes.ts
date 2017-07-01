@@ -17,7 +17,7 @@ export const routes: Routes = [
     { path: '', redirectTo: "/bed/all", pathMatch: 'full' },
     { path: 'bed', redirectTo: "/bed/all", pathMatch: 'full' },
     { path: 'bed/:id', component: GardenComponent },
-    { path: 'plant/:id', component: PlantComponent },
+    { path: 'plant/:bed/:id', component: PlantComponent },
     { path: 'admin', component: AdminComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/importData', component: ImportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/exportData', component: ExportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},

@@ -47,9 +47,9 @@ public class TestViewsPerHour{
         //System.out.println(plantController.getJSONFeedbackForPlantByPlantID("16053.0","googleCharts uploadId"));
         //System.out.println(plantController.getJSONFeedbackForPlantByPlantID("16037.0","googleCharts uploadId"));
 
-        String json1 =plantController.getPlantFeedbackByPlantIdJSON("16053.0","googleCharts uploadId");
-        String json2 = plantController.getPlantFeedbackByPlantIdJSON("16037.0","googleCharts uploadId");
-        String json3 = plantController.getPlantFeedbackByPlantIdJSON("16037.0","invalid uploadId");
+        String json1 =plantController.getPlantFeedbackByPlantIdJSON("16053.0", "5.0","googleCharts uploadId");
+        String json2 = plantController.getPlantFeedbackByPlantIdJSON("16037.0", "2S","googleCharts uploadId");
+        String json3 = plantController.getPlantFeedbackByPlantIdJSON("16037.0","2S", "invalid uploadId");
 
         assertEquals("the plant 16053 should have like:true and like:false","{ \"likeCount\" : 1 , \"dislikeCount\" : 1 , \"commentCount\" : 0}", json1 );
         assertEquals("the plant 16037 should have like:true and like:false","{ \"likeCount\" : 2 , \"dislikeCount\" : 1 , \"commentCount\" : 0}", json2);

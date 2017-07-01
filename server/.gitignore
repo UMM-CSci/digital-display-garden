@@ -1,4 +1,5 @@
 build
 .nfs
 config.properties
+config.properties.deployment
 authorized.users

@@ -1,15 +1,24 @@
 #!/bin/bash
 
+#Cleanup old server/build files
 rm -r ~/server
 rm ~/server.tar
 ./gradlew clean
+
+#Rebuild the project and extract it to home
 ./gradlew build
 cp server/build/distributions/server.tar ~
-cd ~
-pwd
-tar xvf server.tar
+tar xvf ~/server.tar -C ~
 sleep 1
-cd server
-pwd
+
+#Maintain the configuration and authentication files
+AUTH_USERS_PATH="`pwd`/server/authorized.users"
+DEPLOYMENT_CONFIG_PATH="`pwd`/server/config.properties.deployment"
+
+ln -s "$AUTH_USERS_PATH" ~/server/authorized.users
+ln -s "$DEPLOYMENT_CONFIG_PATH" ~/server/config.properties
+
+#Run the server
+cd ~/server
 bin/server
 

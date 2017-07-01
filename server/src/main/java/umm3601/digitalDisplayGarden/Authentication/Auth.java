@@ -86,9 +86,7 @@ public class Auth {
             WatchKey watchKey = path.register(watchService, ENTRY_CREATE);
             authorizeUserChangePoller = new AuthWatchdogThread(watchKey);
             authorizeUserChangePoller.start();
-        }
-        catch(IOException ioe)
-        {
+        } catch (IOException ioe) {
             System.err.println("WatchService could not be established!");
             System.err.println("authorized.users will not automatically be imported.");
         }
@@ -96,9 +94,7 @@ public class Auth {
         try {
             String authFileLocation = "authorized.users";
             readAuthenticatedUsers(new FileInputStream(authFileLocation));
-        }
-        catch(FileNotFoundException fnfe)
-        {
+        } catch (FileNotFoundException fnfe) {
             System.err.println("authorized.users file not found!");
             System.err.println("Could not add users to initial set of authorized users");
             System.err.println("Create authorized.users and authorized users should be imported automatically.");
@@ -121,7 +117,7 @@ public class Auth {
     /**
      * @return A string containing a URL that we can send visitors to in order to authenticate them
      */
-    public String getAuthURL(String originatingURL){
+    public String getAuthURL(String originatingURL) {
         // I think we have to create a new service for every request we send out
         // since each one needs a different secretState
         final OAuth20Service service = new ServiceBuilder()
@@ -141,7 +137,6 @@ public class Auth {
     }
 
     /**
-     *
      * @param jwt - a JSON Web Token, signed by us, that contains the authorization
      *            info
      * @return true if this is a JWT token, that we signed, that is not expired, else return false
@@ -154,7 +149,7 @@ public class Auth {
         try {
 
             SignedJWT parsedState = SignedJWT.parse(jwt);
-            JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey)keyPair.getPublic());
+            JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) keyPair.getPublic());
             if (parsedState.verify(verifier)) {
                 // the signature is valid, so check the expiration date
                 TimeStampToken timeStampToken = gson.fromJson(parsedState
@@ -201,7 +196,6 @@ public class Auth {
     }
 
 
-
     public String generateSharedGoogleSecret(String originatingURL) {
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         JWSSigner signer = new RSASSASigner(privateKey);
@@ -231,13 +225,14 @@ public class Auth {
     /**
      * This method verifies that we signed the TimeStamp
      * token and returns the payload parsed into a RedirectToken
+     *
      * @param state a JWT that we generated to send to Google
      * @return The parsed body of the JWT, or null if an error occurred
      */
     public RedirectToken unpackSharedGoogleSecret(String state) {
         try {
             SignedJWT parsedState = SignedJWT.parse(state);
-            JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey)keyPair.getPublic());
+            JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) keyPair.getPublic());
             if (parsedState.verify(verifier)) {
                 return gson.fromJson(parsedState
                         .getPayload()
@@ -265,17 +260,18 @@ public class Auth {
      * tokens from Google, confirms the signature (even though Google
      * says we don't need to work about it since we are fetching via
      * HTTPS), and user's email from the token.
+     *
      * @param state should be a JWT signed by us
-     * @param code should be a "code" (whatever that means) from Google
+     * @param code  should be a "code" (whatever that means) from Google
      * @return a string with URL that the visitor was originally trying
-     *         to load. Null if the state or code are invalid in any way
-     *         or if we cannot contact Google to verify them.
+     * to load. Null if the state or code are invalid in any way
+     * or if we cannot contact Google to verify them.
      */
     public String verifyCallBack(String state, String code) throws UnauthorizedUserException, ExpiredTokenException {
         // parse the state and ensure its validity
         RedirectToken verifiedState = unpackSharedGoogleSecret(state);
         DateTime expTime = new DateTime(verifiedState.exp);
-        if(expTime.isBeforeNow()) {
+        if (expTime.isBeforeNow()) {
             // the user took too long to complete the authentication
             throw new ExpiredTokenException("The DDG token is expired");
         }
@@ -311,12 +307,12 @@ public class Auth {
                 throw new UnauthorizedUserException();
             }
 
-        } catch (IOException|InterruptedException|ExecutionException e) {
+        } catch (IOException | InterruptedException | ExecutionException e) {
             // these just generally mean that something went wrong
             // with interacting with Google's API
             e.printStackTrace();
             return null;
-        } catch (OAuth2AccessTokenErrorResponse e){
+        } catch (OAuth2AccessTokenErrorResponse e) {
             //invalid client
             System.err.println("OAUTH2 ClientID was invalid!");
             System.err.println("If you just set up a new ClientID then google may still be trying to process things.");
@@ -330,11 +326,12 @@ public class Auth {
      * Consumes a JWT signed by Google and a URL to the location
      * where Google publishes their public keys. Verifies the signature
      * on the JWT and returns the payload decoded into normal JSON
-     * @param jwt A JTW signed by Google
+     *
+     * @param jwt        A JTW signed by Google
      * @param keyOptions The URL to where Google publishes its public keys
      * @return the payload of the JWT as normal JSON or null if some sort of error occurred
      */
-     private String parseAndValidate(String jwt, URL keyOptions) {
+    private String parseAndValidate(String jwt, URL keyOptions) {
 
         try {
             ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
@@ -365,13 +362,14 @@ public class Auth {
     /**
      * Fetches the Google's OpenID configuration and parses
      * it the fields we care about (currently only one)
+     *
      * @return a new OpenIDConfiguration object that contains the URL from which we can fetch Google's public keys
      * @throws IOException when something goes wrong with with fetching the data
      */
     public OpenIDConfiguration getOpenIDConfiguration() throws IOException {
         try {
             InputStream in = new URL(googleOpenIDConfigurationEndpoint).openStream();
-            return gson.fromJson(IOUtils.toString(in),OpenIDConfiguration.class);
+            return gson.fromJson(IOUtils.toString(in), OpenIDConfiguration.class);
         } catch (MalformedURLException e) {
             System.out.println("Your dev is an idiot. Authentication will fail because we could not verify Google's signatures.");
             return null;
@@ -381,10 +379,11 @@ public class Auth {
     /**
      * Checks to see if the email is in our list of
      * addresses that have access to the system.
+     *
      * @param email A string containing an email address
      * @return True iff the email is in our list
      */
-    public boolean userIsAuthorized(String email){
+    public boolean userIsAuthorized(String email) {
         return authUsers.contains(email);
     }
 
@@ -393,9 +392,10 @@ public class Auth {
      * of 24 hours. The body of the cookie is simply
      * a signed JWT that has an expiration date baked
      * into it.
+     *
      * @return the new Cookie
      */
-    public Cookie getCookie(){
+    public Cookie getCookie() {
         // 12 hours * 60 minutes/hour * 60 seconds/minute = 43200 seconds
         int timeToLive = 43200;
         String cookieBody = generateCookieBody(timeToLive);
@@ -404,24 +404,24 @@ public class Auth {
         return c;
     }
 
-    private void readAuthenticatedUsers(InputStream authFileStream)
-    {
+    private void readAuthenticatedUsers(InputStream authFileStream) {
+        //Read (buffer) users into a set, then commit to them by writing to authUsers
         Set<String> out = new TreeSet<String>();
         try {
             Scanner reader = new Scanner(authFileStream);
             String token;
-            while(reader.hasNext())
-            {
+
+            //If you ever encounter "ALLOW", the following token is expected to be
+            //a valid google-affiliated email
+            while (reader.hasNext()) {
                 token = reader.next();
-                if(token.equals("ALLOW")) {
+                if (token.equals("ALLOW")) {
                     String authorizedUser = reader.next();
                     out.add(authorizedUser);
                     System.out.println("Authorizing " + authorizedUser);
                 }
             }
-        }
-        catch(NoSuchElementException e)
-        {
+        } catch (NoSuchElementException e) {
             System.err.println("Authorized User file is corrupt!");
             System.err.println("Expected: email address. Found: end of file");
             e.printStackTrace();
@@ -431,11 +431,10 @@ public class Auth {
     }
 
     //https://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
-    private class AuthWatchdogThread extends Thread
-    {
+    private class AuthWatchdogThread extends Thread {
         WatchKey key;
-        public AuthWatchdogThread(WatchKey wk)
-        {
+
+        public AuthWatchdogThread(WatchKey wk) {
             this.key = wk;
         }
 
@@ -444,31 +443,27 @@ public class Auth {
             System.out.println("Authorized User Watchdog Service Started");
             while (true) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    //we only register "ENTRY_MODIFY" so the context is always a Path.
                     final Path changed = (Path) event.context();
 //                    System.out.println("Event: " + event.kind().toString());
 //                    System.out.println("Target: " + changed.toString());
 
-                    if (changed.toString().equals("authorized.users")) {
-                        if(event.kind().equals(ENTRY_CREATE) || event.kind().equals(ENTRY_MODIFY))
-                            System.out.println("Authorized Users file has changed.");
-                            try {
-                                readAuthenticatedUsers(new FileInputStream("authorized.users"));
-                            }
-                            catch(IOException ioe)
-                            {
-                                System.err.println("Failed to read authenticated users!");
-                                ioe.printStackTrace();
-                            }
+                    //Links to files will have a tilde appended
+                    if (changed.toString().equals("authorized.users") || changed.toString().equals("authorized.users~")) {
+                        System.out.println("Authorized Users file has changed.");
+                        try {
+                            readAuthenticatedUsers(new FileInputStream("authorized.users"));
+                        } catch (IOException ioe) {
+                            System.err.println("Failed to read authenticated users!");
+                            ioe.printStackTrace();
+                        }
+                    }
+                    // reset the key
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        System.out.println("Key has been unregistered");
                     }
                 }
-                // reset the key
-                boolean valid = key.reset();
-                if (!valid) {
-                    System.out.println("Key has been unregistered");
-                }
             }
-
         }
     }
 

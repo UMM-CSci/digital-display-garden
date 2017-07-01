@@ -48,7 +48,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
                     if (type.equals("likes")) {
                         likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                     }
@@ -263,7 +263,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
 
                     likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                     dislikes += feedback[PlantController.PLANT_FEEDBACK_DISLIKES];
@@ -315,7 +315,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
                     likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                 }
 

@@ -17,7 +17,7 @@ No permanent damage will be done, but it's pretty annoying to deal with.
 * Go to server/Tasks/application
     
     click ***run***
-    
+    Make sure that `config.properties` exists within the `/server/` directory. For more information on this file see [ServerConfiguration.md](./ServerConfiguration.md) and the example files within `/server/`. 
 #### To run the Client:
 * Go to client/Tasks/application
 
