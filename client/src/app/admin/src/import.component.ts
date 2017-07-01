@@ -11,8 +11,12 @@ export class ImportComponent implements OnInit {
 
     @ViewChild('fu') fu;
 
+    authorized: boolean;
     filename:string;
     uploadAttempted:boolean = false;
+
+    constructor(private adminService: AdminService){
+    }
 
     handleUploadForImport(){
         this.fu.uploadForImport().subscribe(
@@ -22,6 +26,9 @@ export class ImportComponent implements OnInit {
             },
             err => {
                 this.uploadAttempted = true;
+                if (err.status === 403) {
+                    window.location.reload();
+                }
             }
 
         );
@@ -35,12 +42,15 @@ export class ImportComponent implements OnInit {
             },
             err => {
                 this.uploadAttempted = true;
+                if (err.status === 403) {
+                    window.location.reload();
+                }
             }
 
         );
     }
 
     ngOnInit(): void {
-
+        this.adminService.authorized().subscribe(authorized => this.authorized = authorized);
     }
 }

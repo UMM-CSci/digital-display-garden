@@ -23,7 +23,7 @@ export class FileUploadComponent {
             for (let i = 0; i < fileCount; i++) {
                 formData.append('file[]', inputEl.files.item(i));
             }
-            return this.http.post(this.url + "admin/import", formData);
+            return this.http.post(this.url + "admin/import", formData, {withCredentials: true});
         }
     }
 
@@ -35,7 +35,7 @@ export class FileUploadComponent {
             for (let i = 0; i < fileCount; i++) {
                 formData.append('file[]', inputEl.files.item(i));
             }
-            return this.http.post(this.url + "admin/patch", formData);
+            return this.http.post(this.url + "admin/patch", formData, {withCredentials: true});
         }
     }
 }

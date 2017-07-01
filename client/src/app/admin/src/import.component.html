@@ -1,0 +1,34 @@
+<div *ngIf="this.authorized" class="import-page">
+    <h2>Import Spreadsheet</h2>
+
+    <file-upload #fu (change)="filename = undefined; uploadAttempted = false" [multiple]="false">-</file-upload>
+
+
+    <button *ngIf="filename === undefined" class="btn btn-primary" (click)="this.handleUploadForImport()" style="margin-top: 10px">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+        Import
+    </button>
+
+    <button *ngIf="filename === undefined" class="btn btn-primary" (click)="this.handleUploadForPatch()" style="margin-top: 10px">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+        Update
+    </button>
+
+    <div *ngIf="filename!==undefined" class="alert alert-success" role="alert"> Your file was successfully uploaded as data set {{this.filename}}.
+    </div>
+    <div *ngIf="filename === undefined && uploadAttempted === true" class="alert alert-danger" role="alert">
+        File upload failed
+        <br/>
+        Please Upload a file that ends with .xlsx
+    </div>
+
+    <div>
+
+    <button  [routerLink]="['/admin']" class="btn btn-primary" style="float: right">Back to Admin Page</button>
+
+    </div>
+</div>
+
+<div *ngIf="!this.authorized">
+    <h4>Authenticating...</h4>
+</div>

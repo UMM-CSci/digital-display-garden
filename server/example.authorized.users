@@ -1,0 +1,7 @@
+"ALLOW" anywhere in the file followed by a "google affiliated email."
+will create a new entry of an authorized user.
+
+ALLOW admin1@googleaffiliated.website.com
+ALLOW admin2@google.com
+ALLOW admin3@morris.umn.edu
+ALLOW admin4@umn.edu
