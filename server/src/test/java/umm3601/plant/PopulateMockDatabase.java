@@ -11,6 +11,7 @@ import com.mongodb.util.JSON;
 import org.bson.*;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import umm3601.digitalDisplayGarden.PlantController;
 
@@ -27,7 +28,10 @@ public class PopulateMockDatabase {
 
 
     public static void clearAndPopulateDBAgain(MongoDatabase testDB) throws IOException {
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
+        TimeZone cst = TimeZone.getTimeZone("America/Chicago");
+        TimeZone.setDefault(cst);
+        DateTimeZone.setDefault(DateTimeZone.forTimeZone(cst));
+
         testDB.drop();
         MongoCollection plants = testDB.getCollection("plants");
         MongoCollection beds = testDB.getCollection("beds");
