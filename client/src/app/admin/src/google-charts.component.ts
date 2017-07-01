@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-//import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import {AdminService} from "./admin.service";
 import {Observable} from "rxjs";
 
@@ -56,7 +55,7 @@ export class GraphComponent implements OnInit {
     public updateMap(): void{
         this.adminService.getBedMetadataForMap()
             .subscribe(result => {
-                this.mapOptions.dataTable = this.createDataTableMap(this.processMapData(result));
+                this.mapOptions.dataTable = this.createDataTableMap(GraphComponent.processMapData(result));
                 this.mapOptions = Object.create(this.mapOptions);
             }, err => console.log(err));
     }
@@ -72,7 +71,7 @@ export class GraphComponent implements OnInit {
     public updatetop20likes(): void{
         this.adminService.get20MostLikes()
             .subscribe(result => {
-                    this.top20ChartDataLikes["dataTable"] = this.createDataTableTop20(result);
+                    this.top20ChartDataLikes["dataTable"] = GraphComponent.createDataTableTop20(result);
                     this.top20ChartDataLikes = Object.create(this.top20ChartDataLikes);
             }, err => console.log(err));
     }
@@ -80,7 +79,7 @@ export class GraphComponent implements OnInit {
     public updatetop20dislikes(): void{
         this.adminService.get20MostDisLikes()
             .subscribe(result => {
-                    this.top20ChartDataDisLikes["dataTable"] = this.createDataTableTop20(result);
+                    this.top20ChartDataDisLikes["dataTable"] = GraphComponent.createDataTableTop20(result);
                     this.top20ChartDataDisLikes = Object.create(this.top20ChartDataDisLikes);
             }, err => console.log(err));
     }
@@ -88,7 +87,7 @@ export class GraphComponent implements OnInit {
     public updatetop20comments(): void{
         this.adminService.get20MostComments()
             .subscribe(result => {
-                this.top20ChartDataComments["dataTable"] = this.createDataTableTop20(result);
+                this.top20ChartDataComments["dataTable"] = GraphComponent.createDataTableTop20(result);
                 this.top20ChartDataComments = Object.create(this.top20ChartDataComments);
             }, err => console.log(err));
     }
@@ -102,7 +101,7 @@ export class GraphComponent implements OnInit {
         options: {'title': 'Top 20 Plants with Most Likes', hAxis : {'title' :'Cultivar Name'}, vAxis : {'title' :'Amount of Likes'}, legend:{position: 'none'},
             height: 400,
             bar: {groupWidth: '20%'}},
-    }
+    };
 
     public top20ChartDataDisLikes = {
         chartType: `ColumnChart`,
@@ -112,7 +111,7 @@ export class GraphComponent implements OnInit {
         ],
         options: {'title': 'Top 20 Plants with Most DisLikes', hAxis : {'title' :'Cultivar Name'}, vAxis : {'title' :'Amount of Dislikes'}, legend:{position: 'none'},
             height: 400, bar: {groupWidth: '20%'}},
-    }
+    };
 
     public top20ChartDataComments = {
         chartType: `ColumnChart`,
@@ -122,7 +121,7 @@ export class GraphComponent implements OnInit {
         ],
         options: {'title': 'Top 20 Plants with Most Comments', hAxis : {'title' :'Cultivar Name'}, vAxis : {'title' :'Amount of Comments'}, legend:{position: 'none'},
             height: 400, bar: {groupWidth: '20%'}},
-    }
+    };
 
     public line_ChartData = {
         chartType: `AreaChart`,
@@ -142,7 +141,7 @@ export class GraphComponent implements OnInit {
             ['13',  0], ['14',  0], ['15',  0], ['16',  0], ['17',  0], ['18',  0], ['19',  0], ['20',  0], ['21',  0], ['22',  0], ['23',  0],
         ],
         options: {'title': 'Flower View Counts over Time', hAxis : {'title' :'Time (hours)'}, vAxis : {'title' :'Flower View Counts'}},
-    }
+    };
 
     public comboChart = {
         chartType: 'ComboChart',
@@ -201,7 +200,7 @@ export class GraphComponent implements OnInit {
                     type: `line`},
             }
         },
-    }
+    };
 
 
     //Latitude and Longitude of POSSIBLE gardenLocations (TODO:confirm locations with customer)
@@ -211,7 +210,7 @@ export class GraphComponent implements OnInit {
 
     //TODO: Same as previous todo, these are kind of random bubbles
     public bedLocationsForBubble = [[15,40], [15,60], [22,41], [23,55], [32,37], [37,37],
-        [36,68], [47,51], [32,71], [58,70], [68,68], [22,68]]
+        [36,68], [47,51], [32,71], [58,70], [68,68], [22,68]];
 
     public mapOptions = {
         chartType: `Map`,
@@ -219,7 +218,7 @@ export class GraphComponent implements OnInit {
             [this.bedLocations[0][0], this.bedLocations[0][1], 'Update Graph'],
         ],
         options: {'zoomLevel' : '18', title : false, showInfoWindow: true}
-    }
+    };
 
     public bubbleOption = {
         chartType: `BubbleChart`,
@@ -267,7 +266,7 @@ export class GraphComponent implements OnInit {
                 },
             },
         }
-    }
+    };
 
 
 
@@ -282,11 +281,11 @@ export class GraphComponent implements OnInit {
      * @param mapData
      * @returns {Array<string>}
      */
-    private processMapData(mapData : any[]) : string[]
+    private static processMapData(mapData : any[]) : string[]
     {
-        var buffer : Array<string> = new Array<string>(mapData.length);
+        let buffer : Array<string> = new Array<string>(mapData.length);
 
-        for(var i : number = 0; i < mapData.length; i++)
+        for(let i : number = 0; i < mapData.length; i++)
         {
             buffer[i] =  '<h2>Bed ' + mapData[i]["gardenLocation"] + '</h2>';
             buffer[i] += '<div><strong>Likes:</strong> ' + mapData[i]["likes"]       + '<br/>';
@@ -301,9 +300,9 @@ export class GraphComponent implements OnInit {
     private createDataTableBubble(entry : any[]) : any[][]
     {
 
-        var dataTable : any[][] = new Array<Array<any>>(entry.length+1);
+        let dataTable : any[][] = new Array<Array<any>>(entry.length+1);
 
-        for(var i : number = 0; i < entry.length+1; i++)
+        for(let i : number = 0; i < entry.length+1; i++)
         {
             dataTable[i] = new Array<any>(5);
         }
@@ -313,7 +312,7 @@ export class GraphComponent implements OnInit {
         dataTable[0][2] = 'Y';
         dataTable[0][3] = 'Likes (Colour)';
         dataTable[0][4] = 'Views (Size)';
-        for(var i : number = 0; i < entry.length; i++)
+        for(let i : number = 0; i < entry.length; i++)
         {
             dataTable[i+1][0] = entry[i]['gardenLocation'];
             dataTable[i+1][1] = this.bedLocationsForBubble[i][0];
@@ -327,9 +326,9 @@ export class GraphComponent implements OnInit {
 
     private createDataTableMap(toolWindow: string[]) : any[][]
     {
-        var dataTable : any[][] = new Array<Array<any>>(toolWindow.length+1);
+        let dataTable : any[][] = new Array<Array<any>>(toolWindow.length+1);
 
-        for(var i : number = 0; i < toolWindow.length+1; i++)
+        for(let i : number = 0; i < toolWindow.length+1; i++)
         {
             dataTable[i] = new Array<any>(3);
         }
@@ -337,7 +336,7 @@ export class GraphComponent implements OnInit {
         dataTable[0][0] = 'Lat';
         dataTable[0][1] = 'Long';
         dataTable[0][2] = 'ToolWindow';
-        for(var i : number = 0; i < toolWindow.length; i++)
+        for(let i : number = 0; i < toolWindow.length; i++)
         {
 
 
@@ -350,14 +349,14 @@ export class GraphComponent implements OnInit {
         return dataTable;
     }
 
-    private createDataTableTop20(toolWindow: string[]): any[][]{
-        var dataTable: any [][] = new Array<Array<any>>(toolWindow.length+1);
-        for(var i : number = 0; i < toolWindow.length+1; i++){
+    private static createDataTableTop20(toolWindow: string[]): any[][]{
+        let dataTable: any [][] = new Array<Array<any>>(toolWindow.length+1);
+        for(let i : number = 0; i < toolWindow.length+1; i++){
             dataTable[i] = new Array<any>(2);
         }
         dataTable[0][0] = "Cultivar Name";
         dataTable[0][1] = "";
-        for(var i : number = 0; i < toolWindow.length; i++)
+        for(let i : number = 0; i < toolWindow.length; i++)
         {
             dataTable[i+1][0] = toolWindow[i]['cultivarName'];
             dataTable[i+1][1] = toolWindow[i]['likes'];

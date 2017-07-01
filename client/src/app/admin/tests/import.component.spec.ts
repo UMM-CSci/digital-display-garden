@@ -27,7 +27,7 @@ describe("Import Component", () => {
             authorized: () => {
                 return Observable.of(true);
             }
-        }
+        };
 
         TestBed.configureTestingModule({
             imports: [FormsModule, RouterTestingModule],

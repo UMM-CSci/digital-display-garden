@@ -9,9 +9,8 @@ import {AdminService} from "./admin.service";
 
 export class AdminComponent implements OnInit {
     url : String = process.env.API_URL;
-    constructor() {
     authorized : boolean;
-    url : String = API_URL;
+
     constructor(private adminService: AdminService) {
 
     }

@@ -1,6 +1,6 @@
 package umm3601.digitalDisplayGarden.Authentication;
 
 
-public class GoogleToken {
-    public String id_token;
+class GoogleToken {
+    protected String id_token;
 }
