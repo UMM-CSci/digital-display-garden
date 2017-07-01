@@ -27,6 +27,7 @@ public class PopulateMockDatabase {
 
 
     public static void clearAndPopulateDBAgain(MongoDatabase testDB) throws IOException {
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
         testDB.drop();
         MongoCollection plants = testDB.getCollection("plants");
         MongoCollection beds = testDB.getCollection("beds");
