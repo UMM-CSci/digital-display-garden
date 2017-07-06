@@ -5,6 +5,7 @@ import { AppComponent }         from './app/app.component';
 import { routing } from './app/app.routes';
 import { FormsModule } from '@angular/forms';
 import { PipeModule } from './pipe.module';
+import {enableProdMode} from '@angular/core';
 
 import { NavbarComponent } from './app/navbar/navbar.component';
 import { GardenComponent } from "./app/garden/src/garden-component";

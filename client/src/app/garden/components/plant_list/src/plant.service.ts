@@ -17,7 +17,7 @@ import {PlantFeedback} from "./plant-feedback";
 @Injectable()
 export class PlantService {
 
-    private readonly URL: string = API_URL + "plant/";
+    private readonly URL: string = process.env.API_URL + "plant/";
 
     constructor(private http:Http) { }
 

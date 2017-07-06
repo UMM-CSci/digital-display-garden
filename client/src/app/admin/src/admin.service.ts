@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class AdminService {
-    private url: string = API_URL;
+    private url: string = process.env.API_URL;
     constructor(private http:Http) { }
 
     //Authentication HTTP requests

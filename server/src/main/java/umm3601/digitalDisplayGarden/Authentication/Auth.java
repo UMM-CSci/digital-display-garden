@@ -433,16 +433,36 @@ public class Auth {
     //https://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
     private class AuthWatchdogThread extends Thread {
         WatchKey key;
+        AtomicBoolean running;
 
-        public AuthWatchdogThread(WatchKey wk) {
+        private AuthWatchdogThread(WatchKey wk) {
             this.key = wk;
+        }
+
+        public void end() //Come to think of it, there really isn't any clean way to end the server
+        {
+            running.set(false);
         }
 
         @Override
         public void run() {
             System.out.println("Authorized User Watchdog Service Started");
-            while (true) {
+            running = new AtomicBoolean(true);
+            while (running.get()) {
+                try {
+                    Thread.sleep(15000); //Every 15 seconds sounds fine enough for this system.
+                }
+                catch(InterruptedException ie)
+                {
+                    System.err.println("Auth Watchdog's sleep was interrupted. Odd, but not harmful.");
+                }
+
+                //key.pollEvents() is not blocking, so it's meaningful to terminate the
+                //previous while that way. Let's add a sleep so we're not polling for events
+                //every couple microseconds...
+
                 for (WatchEvent<?> event : key.pollEvents()) {
+
                     final Path changed = (Path) event.context();
 //                    System.out.println("Event: " + event.kind().toString());
 //                    System.out.println("Target: " + changed.toString());

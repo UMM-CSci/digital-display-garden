@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../src/admin.service';
 
 
 @Component({
@@ -8,7 +7,6 @@ import { AdminService } from '../src/admin.service';
 })
 
 export class IncorrectAccountComponent implements OnInit {
-    url : String = API_URL;
     constructor() {
     }
 
