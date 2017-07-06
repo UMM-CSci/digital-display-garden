@@ -14,6 +14,7 @@ import {BedCollection} from "./bedcollection";
 @Injectable()
 export class BedDropdownService {
 
+    private readonly URL: string = process.env.API_URL;
     /**
      * Master collection of beds
      */
@@ -41,7 +42,7 @@ export class BedDropdownService {
      * @returns {Observable<R>} - the bed name collection from the server
      */
     private getBedNamesFromServer(): Observable<Bed[]> {
-        return this.http.request(API_URL + "gardenLocations").map(res => res.json());
+        return this.http.request(this.URL + "gardenLocations").map(res => res.json());
     }
 
     /**
@@ -61,9 +62,9 @@ export class BedDropdownService {
     reportBedVisit(gardenLocation : string, isQR : boolean): Observable<boolean> {
         console.log("!?");
         if(isQR) {
-            return this.http.post(API_URL + "qrVisit", gardenLocation).map(res => res.json());
+            return this.http.post(this.URL + "qrVisit", gardenLocation).map(res => res.json());
         } else {
-            return this.http.post(API_URL + "bedVisit", gardenLocation).map(res => res.json());
+            return this.http.post(this.URL + "bedVisit", gardenLocation).map(res => res.json());
         }
     }
 }

@@ -9,7 +9,7 @@ import { AdminService } from './admin.service';
 
 export class ExportComponent implements OnInit {
 
-    private url: string = API_URL + "admin/export?uploadId=";
+    private url: string = process.env.API_URL + "admin/export?uploadId=";
 
     private uploadIds: string[];
     private liveUploadId: string;

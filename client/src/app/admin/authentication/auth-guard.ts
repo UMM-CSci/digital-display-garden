@@ -4,8 +4,7 @@ import { AdminService } from "../src/admin.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-
-   url: string = API_URL;
+    private url: string = process.env.API_URL;
 
     constructor(private adminService: AdminService) {}
 

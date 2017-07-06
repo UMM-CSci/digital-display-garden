@@ -18,6 +18,7 @@ import {Bed} from "../../bed_dropdown/src/bed";
 @Injectable()
 export class CommonNameDropdownService {
 
+    private readonly URL: string = process.env.API_URL;
     /**
      * Master collection of common names
      */
@@ -45,7 +46,7 @@ export class CommonNameDropdownService {
      * @returns {Observable<R>} - the common name collection from the server
      */
     getCommonNamesFromServer(): Observable<CommonName[]> {
-        return this.http.request(API_URL + "/commonNames").map(res => res.json());
+        return this.http.request(this.URL + "/commonNames").map(res => res.json());
     }
 
     /**

@@ -7,6 +7,8 @@ const ChunkWebpack = webpack.optimize.CommonsChunkPlugin;
 const ProvidePlugin = webpack.ProvidePlugin;
 const DefinePlugin = webpack.DefinePlugin;
 
+const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+
 module.exports = {
     entry: {
         app: [path.resolve('src', 'boot') ],
@@ -61,8 +63,10 @@ module.exports = {
             }
         }),
         new DefinePlugin({
-            'ENV': JSON.stringify('development'),
-            'API_URL': JSON.stringify('https://localhost:2538/api/')
+            'process.env': {
+                'ENV': JSON.stringify(ENV),
+                'API_URL': JSON.stringify('https://localhost:2538/api/')
+            }
             //TODO: The above IP address will need to be changed to the machine hosting this
         })
     ],

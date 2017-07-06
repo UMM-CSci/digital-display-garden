@@ -579,7 +579,7 @@ public class Server {
     }
 
 
-    public static void readConfig(String configFileLocation) {
+    private static void readConfig(String configFileLocation) {
         try {
             InputStream input = new FileInputStream(configFileLocation);
             Properties props = new Properties();
