@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static com.mongodb.client.model.Filters.and;
@@ -20,23 +21,20 @@ import static org.junit.Assert.assertNull;
  */
 public class TestAccessionPatching
 {
+
     private final static String databaseName = "data-for-testing-only";
 
     public MongoClient mongoClient = new MongoClient();
     public MongoDatabase testDB;
     public ExcelParser parser;
-    public InputStream fromFile;
-    public InputStream fromADDFile;
-    public InputStream fromDELETEFile;
 
     @Before
-    public void clearAndPopulateDatabase(){
+    public void clearAndPopulateDatabase() throws IOException {
         mongoClient.dropDatabase(databaseName);
         testDB = mongoClient.getDatabase(databaseName);
-        fromFile = this.getClass().getResourceAsStream("/AccessionList2016.xlsx");
-        fromADDFile = this.getClass().getResourceAsStream("/AccessionList2016_ADD_17603.xlsx");
-        fromDELETEFile = this.getClass().getResourceAsStream("/AccessionList2016_DELETED_3_1600[1,9].xlsx");
+        InputStream fromFile = this.getClass().getResourceAsStream("/Test_Accession2016.xlsx");
         parser = new ExcelParser(fromFile, testDB);
+
     }
 
     @Test
@@ -60,39 +58,53 @@ public class TestAccessionPatching
         String oldUploadId = ExcelParser.getLiveUploadId(testDB);
         parser.populateDatabase(plantArray, "an arbitrary ID");
 
-        try {
-            assertEquals(286, plants.count(eq("uploadId", "an arbitrary ID")));
-            assertEquals(13, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "an arbitrary ID"))));
+        System.gc();
 
+        try {
+            assertEquals(6, plants.count(eq("uploadId", "an arbitrary ID")));
+            assertEquals(4, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "an arbitrary ID"))));
+            InputStream fromADDFile = this.getClass().getResourceAsStream("/Test_PatchingAccession2016_ADD_17603.xlsx");
             parser = new ExcelParser(fromADDFile, testDB);
             plantArray = parser.parseExcel();
             parser.patchDatabase(plantArray, "an arbitrary ID", "a totally arbitrary ID");
-
-
-            //In the ADD spreadsheet a flower by TARANTULA BLUE is uploaded
-            assertEquals(286+1, plants.count(eq("uploadId", "a totally arbitrary ID")));
-            assertEquals("Does not have 13 Begonias",13, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "a totally arbitrary ID"))));
-            assertEquals("No TARANTULA found in ADD spreadsheet", 1, plants.count(eq("commonName", "TARANTULA")));
-
-            //Add a comment so that when the database is patched it will copy over a comment
-            PlantController plantController = new PlantController(testDB);
-            plantController.storePlantComment("{ plantId: \"16011.0\", comment : \"Here is our comment for this test\" }","a totally arbitrary ID");
-
-            parser = new ExcelParser(fromDELETEFile, testDB);
-            plantArray = parser.parseExcel();
-            parser.patchDatabase(plantArray, "a totally arbitrary ID", "an even more arbitrary ID");
-
-
-            //In the DELETED spreadsheet 2 Begonias are removed
-            //3 flowers in total are removed
-            assertEquals(286+1-3-1, plants.count(eq("uploadId", "an even more arbitrary ID")));
-            assertEquals("Does not have 13-2 Begonias",13-2, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "an even more arbitrary ID"))));
-            assertEquals("A TARANTULA was found in ADD spreadsheet (how scary)", 0, plants.count(and(eq("commonName", "TARANTULA"), eq("uploadId", "an even more arbitrary ID"))));
 
         }
         finally {
             ExcelParser.setLiveUploadId(oldUploadId, testDB);
         }
+
+        System.gc();
+
+        //In the ADD spreadsheet a flower by TARANTULA BLUE is uploaded
+        assertEquals(7, plants.count(eq("uploadId", "a totally arbitrary ID")));
+        assertEquals("Does not have 4 Begonias",4, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "a totally arbitrary ID"))));
+        assertEquals("No TARANTULA found in ADD spreadsheet", 1, plants.count(eq("commonName", "TARANTULA")));
+
+
+
+        //Add a comment so that when the database is patched it will copy over a comment
+        PlantController plantController = new PlantController(testDB);
+        plantController.storePlantComment("{ plantId: \"16011.0\", comment : \"Here is our comment for this test\" }","a totally arbitrary ID");
+
+
+        try
+        {
+            InputStream fromDELETEFile = this.getClass().getResourceAsStream("/Test_PatchingAccession2016_DELETED_3_1600[1,9].xlsx");
+            parser = new ExcelParser(fromDELETEFile, testDB);
+            plantArray = parser.parseExcel();
+            parser.patchDatabase(plantArray, "a totally arbitrary ID", "an even more arbitrary ID");
+
+
+        }
+        finally {
+            ExcelParser.setLiveUploadId(oldUploadId, testDB);
+        }
+        System.gc();
+        //In the DELETED spreadsheet 2 Begonias are removed
+        //3 flowers in total are removed
+        assertEquals(3, plants.count(eq("uploadId", "an even more arbitrary ID")));
+        assertEquals("Does not have 4-2 Begonias",4-2, plants.count(and(eq("commonName", "Begonia"),eq("uploadId", "an even more arbitrary ID"))));
+        assertEquals("A TARANTULA was found in this uploadId (how scary)", 0, plants.count(and(eq("commonName", "TARANTULA"), eq("uploadId", "an even more arbitrary ID"))));
 
         //For coverage
         ExcelParser.printArray(new String[]{});

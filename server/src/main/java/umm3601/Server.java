@@ -19,9 +19,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import static spark.Spark.*;
 
@@ -612,6 +614,14 @@ public class Server {
                 System.err.println("Reason: callbackURL property not found");
                 System.err.println("See Documentation/ServerConfiguration.md for more information");
                 System.exit(1);
+            }
+            String timezone = props.getProperty("timezone");
+            if (null == timezone) {
+                System.err.println("No timezone provided in config, using default local timezone.");
+            }
+            else
+            {
+                TimeZone.setDefault(TimeZone.getTimeZone(timezone));
             }
             databaseName = props.getProperty("databaseName");
             if (null == databaseName) {

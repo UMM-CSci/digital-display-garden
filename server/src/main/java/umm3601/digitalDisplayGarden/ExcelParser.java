@@ -22,6 +22,7 @@ import org.bson.BsonArray;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.print.Doc;
 //import sun.text.normalizer.UTF16;
@@ -351,6 +352,7 @@ public class ExcelParser {
             bedCollection.findOneAndUpdate(newBedFilter,set("metadata", oldMetadata));
         }
 
+        clearUpload(oldUploadId, database);
         setLiveUploadId(newUploadId, database);
     }
 
