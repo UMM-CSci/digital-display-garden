@@ -10,21 +10,21 @@ describe("Delete Component", () => {
     let deleteComponent: DeleteComponent;
     let fixture: ComponentFixture<DeleteComponent>;
     let adminServiceStub: {
-        getUploadIDs: () => Observable<string[]>,
-        getLiveUploadID: () => Observable<string>,
-        deleteUploadID: (string) => Observable<any>,
+        getUploadIds: () => Observable<string[]>,
+        getLiveUploadId: () => Observable<string>,
+        deleteUploadId: (string) => Observable<any>,
         authorized: () => Observable<boolean>
     };
 
     beforeEach(() => {
         adminServiceStub = {
-            getUploadIDs: () => {
+            getUploadIds: () => {
                 return Observable.of(["upload id 1", "upload id 2"]);
             },
-            getLiveUploadID: () => {
+            getLiveUploadId: () => {
                 return Observable.of("upload id 2");
             },
-            deleteUploadID: (uploadID: string) => {
+            deleteUploadId: (uploadID: string) => {
 
                 return Observable.of({
                     success: ["upload id 1", "upload id 2"].filter(str => str !== uploadID).length === 1,

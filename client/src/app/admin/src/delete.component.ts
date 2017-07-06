@@ -25,7 +25,7 @@ export class DeleteComponent implements OnInit {
 
     delete(uploadID : string)
     {
-        this.adminService.deleteUploadID(uploadID)
+        this.adminService.deleteUploadId(uploadID)
             .subscribe(
                 response => {
                     if (response.success === true) {
