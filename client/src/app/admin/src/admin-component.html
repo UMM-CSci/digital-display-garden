@@ -8,14 +8,14 @@
         Import Spreadsheet
     </button>
 
-    <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/deleteData']">
-        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-        Delete Old Data
-    </button>
-
     <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/exportData']"  >
         <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
         Export Collected Data
+    </button>
+
+    <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/deleteData']">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+        Delete Old Data
     </button>
 
     <a [attr.href]="this.url + 'admin/qrcodes'">
