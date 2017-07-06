@@ -1,17 +1,24 @@
 <div *ngIf="this.authorized" class="menu">
     <h2>Administrator Tasks</h2>
 
-    <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/exportData']"  >
-        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-        Export Collected Data
-    </button>
+
 
     <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/importData']">
         <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
         Import Spreadsheet
     </button>
 
-    <a [attr.href]="this.url + 'admin/qrcodes'" target="_blank">
+    <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/exportData']"  >
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+        Export Collected Data
+    </button>
+
+    <button type="button" class="btn btn-primary btn-lg" [routerLink]="['/admin/deleteData']">
+        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+        Delete Old Data
+    </button>
+
+    <a [attr.href]="this.url + 'admin/qrcodes'">
         <button type="button" class="btn btn-primary btn-lg">
             <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
             Download QR Codes

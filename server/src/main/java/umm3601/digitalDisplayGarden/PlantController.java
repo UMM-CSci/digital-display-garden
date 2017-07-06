@@ -698,6 +698,42 @@ public class PlantController {
         return true;
     }
 
+    /**
+     * Deletes all data associated with the specified uploadID
+     * in the database.
+     * Returns a Document of the following form
+     * <code>
+     *     {
+     *         success: boolean,
+     *         uploadIDs: [ String, ... ]
+     *     }
+     * </code>
+     * Success will be true if the uploadID was found and false if it wasn't.
+     * <br/>
+     * uploadIDs contains a list of the remaining uploadIDs in the database
+     * @param uploadID the uploadID to delete
+     * @return A Document specifying the status of the operation
+     * @throws IllegalStateException if the specified uploadID is currently the liveUploadID
+     */
+    public Document deleteUploadID (String uploadID) {
+
+        if (ExcelParser.getLiveUploadId(db).equals(uploadID)) {
+            throw new IllegalStateException("The uploadID cannot be deleted because it is the liveUploadID");
+        }
+        Document filterDoc = new Document();
+        Document returnDoc = new Document();
+
+        filterDoc.append("uploadId", uploadID);
+        boolean deleted = plantCollection.deleteMany(filterDoc).getDeletedCount() > 0;
+        deleted = deleted && (bedCollection.deleteMany(filterDoc).getDeletedCount() > 0);
+        commentCollection.deleteMany(filterDoc);
+
+        returnDoc.append("success", deleted);
+        returnDoc.append("uploadIDs", ExcelParser.listUploadIds(db));
+
+        //deleteDirectory(new File(".photos/" + uploadID));
+        return returnDoc;
+    }
 
 
 }

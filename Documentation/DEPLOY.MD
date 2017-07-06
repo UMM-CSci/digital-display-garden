@@ -53,6 +53,8 @@ Once you have your API Key, place it in the following code block where it says *
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&callback=initMap"
   type="text/javascript"></script>
 ```
+#### Set up NGINX for HTTPS:
+See [Https.md](./Https.md)
 
 ## Starting the machine!  
 Now we can start! This part is pretty simple. I made a bash script that will clean, build, gradle and start the server. I also normally use a cool tool called *tmux* to start a process, be able to walk away from deploy-user, come back, re-attach to the process, and see how the server is doing. Here is a [tmux cheat sheet](https://gist.github.com/henrik/1967800) for more info. Here are some easy steps to get the project up and running:

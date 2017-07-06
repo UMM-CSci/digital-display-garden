@@ -21,10 +21,12 @@ import { AdminComponent } from "./app/admin/src/admin.component";
 import {SlowLoginComponent} from "./app/admin/authentication/slow-login.component";
 import {AuthGuard} from "./app/admin/authentication/auth-guard";
 import {IncorrectAccountComponent} from "./app/admin/authentication/incorrect-account.component";
-
+import {ConfirmOptions, Position, ConfirmModule} from 'angular2-bootstrap-confirm';
+import {Positioning} from 'angular2-bootstrap-confirm/position';
 
 import { PlantComponent } from "./app/garden/components/plant_list/src/plant.component";
 import { ImportComponent } from "./app/admin/src/import.component";
+import { DeleteComponent } from "./app/admin/src/delete.component";
 import { AdminService } from "./app/admin/src/admin.service";
 import { ExportComponent } from "./app/admin/src/export.component";
 import { FileUploadComponent } from "./app/admin/src/file-upload.component";
@@ -39,6 +41,7 @@ import { RouterModule } from "@angular/router";
 @NgModule({
     imports: [
         BrowserModule,
+        ConfirmModule,
         HttpModule,
         JsonpModule,
         routing,
@@ -60,6 +63,7 @@ import { RouterModule } from "@angular/router";
         AdminComponent,
         ImportComponent,
         ExportComponent,
+        DeleteComponent,
         FileUploadComponent,
         FooterComponent,
         GraphComponent,
