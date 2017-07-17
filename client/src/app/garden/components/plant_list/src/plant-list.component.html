@@ -91,16 +91,49 @@
     <div class="row-plant-list">
 
         <div class="plant-list-header">
-            Plants
+
+            <span *ngIf="plantListService.getBedFilter() == 'ALL'">
+                <span *ngIf="plantListService.getCommonNameFilter() == 'ALL'">
+                    Plants
+                </span>
+                <span *ngIf="plantListService.getCommonNameFilter() != 'ALL'">
+                    {{plantListService.getCommonNameFilter()}}
+                </span>
+            </span>
+
+            <span *ngIf="plantListService.getBedFilter() != 'ALL'">
+                <span *ngIf="plantListService.getCommonNameFilter() == 'ALL'">
+                    Plants in Bed {{plantListService.getBedFilter()}}
+                </span>
+
+                <span *ngIf="plantListService.getCommonNameFilter() != 'ALL'">
+                    {{plantListService.getCommonNameFilter()}} in Bed {{plantListService.getBedFilter()}}
+                </span>
+
+            </span>
         </div>
 
         <div class="plant-list-body">
             <ul>
                 <li *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.gardenLocation, plant.id]">
                     <a>
-                        <span class="common-name"> {{ plant.commonName }}</span>
-                        <br>
-                        <span class="cultivar">{{ plant.cultivar}}</span>
+
+                        <span *ngIf="plantListService.getCommonNameFilter() == 'ALL'">
+                            <span class="common-name"> {{ plant.commonName}}</span>
+                            <br>
+                            <span class="cultivar">{{ plant.cultivar}}</span>
+                            <span *ngIf="plantListService.getBedFilter() == 'ALL'">
+                                <strong>&#xb7;</strong> Bed {{plant.gardenLocation}}
+                            </span>
+                        </span>
+                        <!-- The version of angular we are using, if-else doesn't work. Two ifs will suffice -->
+                        <span *ngIf="plantListService.getCommonNameFilter() != 'ALL'">
+                            <span class="common-name">{{ plant.cultivar}}</span>
+                            <span *ngIf="plantListService.getBedFilter() == 'ALL'">
+                                <br>
+                                Bed {{plant.gardenLocation}}
+                            </span>
+                        </span>
                     </a>
                 </li>
             </ul>

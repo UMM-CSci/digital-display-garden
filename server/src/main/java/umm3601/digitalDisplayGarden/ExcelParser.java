@@ -326,7 +326,7 @@ public class ExcelParser {
 
             if(!emptyBed && !xed) {
                 for (int j = 0; j < cellValues[i].length; j++) {
-                    doc.append(keys[j], cellValues[i][j]);
+                    doc.append(keys[j], cellValues[i][j].trim());
                 }
 
                 System.out.println(doc);
