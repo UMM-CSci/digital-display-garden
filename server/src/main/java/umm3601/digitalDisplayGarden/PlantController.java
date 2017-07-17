@@ -121,10 +121,11 @@ public class PlantController {
      * </code>
      *
      * @param plantID an ID number of a plant in the DB
+     * @param gardenLocation the location in the garden to find the plant in
      * @param uploadID Dataset to find the plant
      * @return a string representation of a JSON value
      */
-    public String getPlantByPlantID(String plantID, String uploadID) {
+    public String getPlantByPlantID(String plantID, String gardenLocation, String uploadID) {
 
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return "null";
@@ -133,6 +134,7 @@ public class PlantController {
         String returnVal;
         try {
             jsonPlant = plantCollection.find(and(eq("id", plantID),
+                    eq("gardenLocation", gardenLocation),
                     eq("uploadId", uploadID)))
                     .projection(fields(include("id", "commonName", "cultivar", "gardenLocation")));
 
@@ -143,7 +145,7 @@ public class PlantController {
             //Add a visit to the plant
             if (iterator.hasNext()) {
                 incrementMetadata(plantID, "pageViews", uploadID);
-                addVisit(plantID, uploadID);
+                addVisit(plantID, gardenLocation, uploadID);
                 returnVal = iterator.next().toJson();
             } else {
                 returnVal = "null";
@@ -169,21 +171,19 @@ public class PlantController {
      * @param uploadID
      * @return
      */
-    public long[] getPlantFeedbackByPlantId(String plantID, String uploadID) {
-
-        if (!ExcelParser.isValidUploadId(db, uploadID))
-            return null;
+    public long[] getPlantFeedbackByPlantId(String plantID, String gardenLocation, String uploadID) {
 
         Document filter = new Document();
         filter.put("commentOnPlant", plantID);
+        filter.put("commentInBed", gardenLocation);
         filter.put("uploadId", uploadID);
         long comments = commentCollection.count(filter);
         long likes = 0;
         long dislikes = 0;
 
 
-        //Get a plant by plantID
-        FindIterable doc = plantCollection.find(new Document().append("id", plantID).append("uploadId", uploadID));
+        //Get a plant by plantID and location
+        FindIterable doc = plantCollection.find(new Document().append("id", plantID).append("gardenLocation", gardenLocation).append("uploadId", uploadID));
 
         Iterator iterator = doc.iterator();
         if(iterator.hasNext()) {
@@ -201,6 +201,7 @@ public class PlantController {
                     dislikes++;
             }
         }
+        else return null;
         long[] out = new long[3];
         out[PLANT_FEEDBACK_LIKES] = likes;
         out[PLANT_FEEDBACK_DISLIKES] = dislikes;
@@ -223,13 +224,16 @@ public class PlantController {
      * }
      */
 
-    public String getPlantFeedbackByPlantIdJSON(String plantID, String uploadID) {
+    public String getPlantFeedbackByPlantIdJSON(String plantID, String gardenLocation, String uploadID) {
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return "null";
         Document out = new Document();
 
         //Get feedback then package it in a JSON(BSON) Document
-        long[] metadataCount = getPlantFeedbackByPlantId(plantID, uploadID);
+        long[] metadataCount = getPlantFeedbackByPlantId(plantID, gardenLocation, uploadID);
+
+        if(metadataCount == null) //invalid gardenLocation or plantId
+            return "null";
 
         out.put("likeCount", metadataCount[0]);
         out.put("dislikeCount", metadataCount[1]);
@@ -344,16 +348,17 @@ public class PlantController {
      * @param uploadId
      * @return
      */
-    public boolean addVisit(String plantID, String uploadId) {
+    public boolean addVisit(String plantID, String gardenLocation, String uploadId) {
         if (!ExcelParser.isValidUploadId(db, uploadId))
             return false;
         Document filterDoc = new Document();
         filterDoc.append("id", plantID);
+        filterDoc.append("gardenLocation", gardenLocation);
         filterDoc.append("uploadId", uploadId);
 
-        //Add a {visit : ObjectId} to the visits array
+        //Add a {visit : Date} to the visits array
         Document visit = new Document();
-        visit.append("visit", new ObjectId());
+        visit.append("visit", new Date());
 
         return null != plantCollection.findOneAndUpdate(filterDoc, push("metadata.visits", visit));
     }
@@ -364,6 +369,7 @@ public class PlantController {
      * <code>
      *     {
      *         plantId: String,
+     *         gardenLocation: String,
      *         comment: String
      *     }
      * </code>
@@ -375,6 +381,7 @@ public class PlantController {
      */
 
     public boolean storePlantComment(String json, String uploadID) {
+        Date now = new Date();
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return false;
 
@@ -385,20 +392,23 @@ public class PlantController {
 
             //If request contains plantId get the plant json by the plantId and current uploadID
             //Add a comment to commentCollection with the plantId, uploadID, and
-            if (parsedDocument.containsKey("plantId") && parsedDocument.get("plantId") instanceof String) {
+            if (parsedDocument.containsKey("plantId") && parsedDocument.get("plantId") instanceof String
+                    && parsedDocument.containsKey("gardenLocation") && parsedDocument.get("gardenLocation") instanceof String) {
 
                 FindIterable<Document> jsonPlant = plantCollection.find(and(eq("id",
-                        parsedDocument.getString("plantId")), eq("uploadId", uploadID)));
+                        parsedDocument.getString("plantId")), eq("gardenLocation", parsedDocument.getString("gardenLocation")), eq("uploadId", uploadID)));
 
                 Iterator<Document> iterator = jsonPlant.iterator();
 
                 if(iterator.hasNext()){
-                    toInsert.put("commentOnPlant", iterator.next().getString("id"));
+                    Document plantDoc = iterator.next();
+                    toInsert.put("commentOnPlant", plantDoc.getString("id"));
+                    toInsert.put("commentInBed", plantDoc.getString("gardenLocation"));
+                    toInsert.put("date", now);
                 } else {
                     System.err.println("Was passed malformed storePlantComment request");
                     return false;
                 }
-//                toInsert.put("liveUploadId", uploadID);
 
             } else {
                 System.err.println("storePlantComment request does not contain plantId");
@@ -436,8 +446,7 @@ public class PlantController {
      * @param uploadID Dataset to find the plant
      * @return true iff the operation succeeded.
      */
-
-    public boolean addFlowerRating(String plantId, boolean like, String uploadID) {
+    public boolean addFlowerRating(String plantId, String gardenLocation, boolean like, String uploadID) {
 
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return false;
@@ -445,6 +454,7 @@ public class PlantController {
         //Get a plant by this plantId and uploadId
         Document filterDoc = new Document();
         filterDoc.append("id", plantId);
+        filterDoc.append("gardenLocation", gardenLocation);
         filterDoc.append("uploadId", uploadID);
 
         Document plantOID;
@@ -458,9 +468,10 @@ public class PlantController {
             return false;
         }
 
-        //Push a new {like : bool, ratingOnObjectOfId : ObjectId} to metadata.ratings for this plant
+        //Push a new {like : bool, date : Date, ratingOnObjectOfId : ObjectId} to metadata.ratings for this plant
         Document rating = new Document();
         rating.append("like", like);
+        rating.append("date", new Date());
         rating.append("ratingOnObjectOfId", new ObjectId(plantOID.get("_id").toString()));
 
         return null != plantCollection.findOneAndUpdate(filterDoc, push("metadata.ratings", rating));
@@ -472,6 +483,7 @@ public class PlantController {
      * <code>
      *     {
      *         id: String,
+     *         gardenLocation: String
      *         like: boolean
      *     }
      * </code>
@@ -487,13 +499,16 @@ public class PlantController {
 
         boolean like;
         String id;
+        String bed;
 
         try {
 
             Document parsedDocument = Document.parse(json);
 
-            if(parsedDocument.containsKey("id") && parsedDocument.get("id") instanceof String){
+            if(parsedDocument.containsKey("id") && parsedDocument.get("id") instanceof String
+                    && parsedDocument.containsKey("gardenLocation") && parsedDocument.get("gardenLocation") instanceof String){
                 id = parsedDocument.getString("id");
+                bed = parsedDocument.getString("gardenLocation");
             } else {
                 return false;
             }
@@ -511,7 +526,7 @@ public class PlantController {
             return false;
         }
 
-        return addFlowerRating(id, like, uploadID);
+        return addFlowerRating(id, bed, like, uploadID);
     }
 
 
@@ -552,6 +567,7 @@ public class PlantController {
         FindIterable iter = commentCollection.find(
                 and(
                         exists("commentOnPlant"),
+                        exists("commentInBed"),
                         eq("uploadId", uploadId)
                 ));
         Iterator iterator = iter.iterator();
@@ -561,7 +577,7 @@ public class PlantController {
             Document comment = (Document) iterator.next();
 
             //Get the plant that this comment was for
-            Iterator<Document> onPlantItr = plantCollection.find(and(eq("id", comment.getString("commentOnPlant")), eq("uploadId", uploadId))).iterator();
+            Iterator<Document> onPlantItr = plantCollection.find(and(eq("id", comment.getString("commentOnPlant")),eq("gardenLocation", comment.getString("commentInBed")), eq("uploadId", uploadId))).iterator();
 
             Document onPlant;
             onPlant = onPlantItr.next(); //NOTE: this should _not_ create an exception, and if it does, the database is corrupt
@@ -573,7 +589,7 @@ public class PlantController {
                 dataToWrite[COL_CMT_CULTIVAR] = onPlant.getString("cultivar");
                 dataToWrite[COL_CMT_GRDNLOC] = onPlant.getString("gardenLocation");
                 dataToWrite[COL_CMT_COMMENT] = comment.getString("comment");
-                dataToWrite[COL_CMT_DATE] = ((ObjectId) comment.get("_id")).getDate().toString();
+                dataToWrite[COL_CMT_DATE] = comment.get("date").toString();
 
                 feedbackWriter.writeToSheet(dataToWrite, FeedbackWriter.SHEET_COMMENTS);
             } catch (Exception e) {
@@ -608,7 +624,7 @@ public class PlantController {
             try {
                 String[] dataToWrite = new String[COL_PLANT_FIELDS];
                 Document metadata = (Document) onPlant.get("metadata");
-                Document feedback = Document.parse(getPlantFeedbackByPlantIdJSON(onPlant.getString("id"), uploadId));
+                Document feedback = Document.parse(getPlantFeedbackByPlantIdJSON(onPlant.getString("id"), onPlant.getString("gardenLocation"), uploadId));
 
 
                 Integer likeCount = feedback.getInteger("likeCount");
@@ -682,6 +698,42 @@ public class PlantController {
         return true;
     }
 
+    /**
+     * Deletes all data associated with the specified uploadID
+     * in the database.
+     * Returns a Document of the following form
+     * <code>
+     *     {
+     *         success: boolean,
+     *         uploadIDs: [ String, ... ]
+     *     }
+     * </code>
+     * Success will be true if the uploadID was found and false if it wasn't.
+     * <br/>
+     * uploadIDs contains a list of the remaining uploadIDs in the database
+     * @param uploadID the uploadID to delete
+     * @return A Document specifying the status of the operation
+     * @throws IllegalStateException if the specified uploadID is currently the liveUploadID
+     */
+    public Document deleteUploadID (String uploadID) {
+
+        if (ExcelParser.getLiveUploadId(db).equals(uploadID)) {
+            throw new IllegalStateException("The uploadID cannot be deleted because it is the liveUploadID");
+        }
+        Document filterDoc = new Document();
+        Document returnDoc = new Document();
+
+        filterDoc.append("uploadId", uploadID);
+        boolean deleted = plantCollection.deleteMany(filterDoc).getDeletedCount() > 0;
+        deleted = deleted && (bedCollection.deleteMany(filterDoc).getDeletedCount() > 0);
+        commentCollection.deleteMany(filterDoc);
+
+        returnDoc.append("success", deleted);
+        returnDoc.append("uploadIDs", ExcelParser.listUploadIds(db));
+
+        //deleteDirectory(new File(".photos/" + uploadID));
+        return returnDoc;
+    }
 
 
 }

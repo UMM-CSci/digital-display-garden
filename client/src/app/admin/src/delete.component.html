@@ -1,0 +1,49 @@
+<div *ngIf="this.authorized" class="delete-page">
+    <h2>Delete Data</h2>
+
+    <ul class="list-group">
+        <li class="row list-group-item">
+            <div class="col-sm-2">
+                Data Set
+            </div>
+        </li>
+        <li *ngFor="let uploadID of uploadIDs" class="row list-group-item">
+
+            <div class="col-sm-2">
+                {{ uploadID }}
+            </div>
+            <div class="col-sm-10">
+                <button
+                        *ngIf="uploadID !== this.liveUploadID"
+                        class="btn btn-link"
+                        mwlConfirm
+                        title="Warning!"
+                        message="You are about to irreversibly delete this data."
+                        placement="right"
+                        confirmText="Proceed"
+                        confirmButtonType="danger"
+                        (confirm)="this.delete(uploadID)">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    Delete this data set
+                </button>
+                <button *ngIf="uploadID === this.liveUploadID"
+                        class="btn btn-link disabled"
+                        mwlConfirm
+                        title="Notice"
+                        message="This data set is currently being displayed on the visitor website.
+                             You must upload a new data set before deleting this one."
+                        placement="right"
+                        cancelText="Close"
+                        confirmButtonType="danger"
+                        hideConfirmButton="true">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    Delete this data set
+                </button>
+            </div>
+        </li>
+    </ul>
+
+    <button [routerLink]="['/admin']" class="btn btn-primary btn-lg" style="float: right">Back to Admin Page</button>
+</div>
+
+

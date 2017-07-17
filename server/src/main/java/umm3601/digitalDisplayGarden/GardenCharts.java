@@ -48,7 +48,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
                     if (type.equals("likes")) {
                         likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                     }
@@ -155,7 +155,7 @@ public class GardenCharts
             dataTable[0][1] = "Views";
 
             ArrayList<Date> dates = getDatesFromDB(uploadID);
-
+            System.out.println("DATES = " + dates);
             ArrayList<Date>[] hoursOfDay = partitionByHour(dates);
 
             int[][] viewsPerHourPerDayOfWeek = averageViewsPerDayOfWeek(hoursOfDay);
@@ -263,7 +263,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
 
                     likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                     dislikes += feedback[PlantController.PLANT_FEEDBACK_DISLIKES];
@@ -315,7 +315,7 @@ public class GardenCharts
 
                 FindIterable<Document> iter = plantCollection.find(filter);
                 for (Document plant : iter) {
-                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), uploadID);
+                    long[] feedback = plantController.getPlantFeedbackByPlantId(plant.getString("id"), plant.getString("gardenLocation"), uploadID);
                     likes += feedback[PlantController.PLANT_FEEDBACK_LIKES];
                 }
 
@@ -458,10 +458,10 @@ public class GardenCharts
             //Get metadata.rating array
             List<Document> ratings = (List<Document>) ((Document) result.get("metadata")).get("visits");
 
-            //Loop through all of the entries within the array, counting like=true(like) and like=false(dislike)
             for(int i = 0; i < ratings.size(); i++){
                 Document d = ratings.get(i);
-                dates.add(((ObjectId) d.get("visit")).getDate());
+                if(!d.isEmpty())
+                    dates.add(((Date) d.get("visit")));
             }
 
         }

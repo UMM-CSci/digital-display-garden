@@ -14,6 +14,7 @@ import umm3601.digitalDisplayGarden.PlantController;
 import umm3601.plant.PopulateMockDatabase;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,13 +68,10 @@ public class TestBedController {
 
         Document visits = bedVisits.get(0);
         //System.out.println(visits.get("visit"));
-        ObjectId objectId = new ObjectId();
-
         String v = visits.get("visit").toString();
 
         //checking to see that the type of visit is an of type/structure of ObjectID
-        assertEquals("they should both be of type org.bson.types.ObjectId ",objectId.getClass().getName(),visits.get("visit").getClass().getName());
-        assertEquals("the object id produced from a visit must be 24 characters",24,v.length());
+        assertEquals("they should both be of type Date ",Date.class.getName(), visits.get("visit").getClass().getName());
 
     }
 
@@ -110,7 +108,7 @@ public class TestBedController {
         assertEquals("this should have 1 visit via qr scanning",1 ,qrVisits.size());
 
         Document qrvisit = qrVisits.get(0);
-        ObjectId objectId = new ObjectId();
+        Date date = new Date();
 
         String s = qrvisit.get("scan").toString();
 
@@ -118,8 +116,8 @@ public class TestBedController {
         assertEquals("there should be two qr scans now",2,qrScans2);
         assertEquals("there should be one pageView via the qr scanned ",1,pageViews);
         //checking to see that the type of visit is an of type/structure of ObjectID
-        assertEquals("they should both be of type org.bson.types.ObjectId ",objectId.getClass().getName(),qrvisit.get("scan").getClass().getName());
-        assertEquals("the object id produced from a visit must be 24 characters",24,s.length());
+        assertEquals("they should both be of type Date ", date.getClass().getName(), qrvisit.get("scan").getClass().getName());
+
     }
 
     @Test

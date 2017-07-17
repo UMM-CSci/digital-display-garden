@@ -10,6 +10,8 @@ import org.junit.Test;
 import umm3601.digitalDisplayGarden.PlantController;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -29,8 +31,11 @@ public class TestPlantComment {
 
     @Test
     public void successfulInputOfComment() throws IOException {
-        String json = "{ plantId: \"16040.0\", comment : \"Here is our comment for this test\" }";
+        String json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
 
+        Date past = Date.from(Instant.now().minusSeconds(1));
+        //This test depends on now being made the same unit of time as within the first line of storePlantComment
+        Date now = new Date();
         assertTrue(plantController.storePlantComment(json, "second uploadId"));
 
         MongoCollection<Document> commentDocuments = testDB.getCollection("comments");
@@ -39,11 +44,13 @@ public class TestPlantComment {
         assertEquals(1, contains);
 
         Iterator<Document> iter = commentDocuments.find().iterator();
-
         Document fromDb = iter.next();
 
         assertEquals("Here is our comment for this test", fromDb.getString("comment"));
         assertEquals("16040.0", fromDb.get("commentOnPlant"));
+        assertEquals("7.0", fromDb.get("commentInBed"));
+        assertEquals(now, fromDb.get("date"));
+        assertNotEquals(past, fromDb.get("date"));
         assertEquals("second uploadId", fromDb.get("uploadId"));
     }
 
@@ -51,11 +58,11 @@ public class TestPlantComment {
     public void failedInputOfComment() throws IOException {
         MongoCollection<Document> commentDocuments = testDB.getCollection("comments");
 
-        String json = "{ plantId: \"58d1c36efb0cac4e15afd27\", comment : \"Here is our comment for this test\" }";
+        String json = "{ plantId: \"58d1c36efb0cac4e15afd27\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
         assertFalse("Added a comment for a plant that doesn't exist", plantController.storePlantComment(json, "second uploadId"));
         assertEquals("Added a comment for a plant that doesn't exist", 0, commentDocuments.count());
 
-        json = "{ plantId: \"16040.0\", comment : \"Here is our comment for this test\" }";
+        json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\", comment : \"Here is our comment for this test\" }";
         assertFalse("Added a comment for an invalid uploadId", plantController.storePlantComment(json, "invalid uploadId"));
         assertEquals("Added a comment for a plant that doesn't exist", 0, commentDocuments.count());
 
@@ -68,6 +75,11 @@ public class TestPlantComment {
         assertEquals("Added a comment without corresponding plant", 0, commentDocuments.count());
 
         json = "{ plantId: \"16040.0\" }";
+        assertFalse( "Added a comment without an actual comment", plantController.storePlantComment(json, "second uploadId"));
+        assertEquals("Added a comment without an actual comment", 0, commentDocuments.count());
+
+
+        json = "{ plantId: \"16040.0\", gardenLocation:\"7.0\" }";
         assertFalse( "Added a comment without an actual comment", plantController.storePlantComment(json, "second uploadId"));
         assertEquals("Added a comment without an actual comment", 0, commentDocuments.count());
 

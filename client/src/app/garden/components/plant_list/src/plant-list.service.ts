@@ -18,7 +18,7 @@ import {PlantFilter} from "./plantfilter";
 export class PlantListService {
 
     // URL for server plant collection
-    private readonly URL: string = API_URL + "plant";
+    private readonly URL: string = process.env.API_URL;
 
     // Master collection of all plants
     private plantCollection: PlantCollection;
@@ -54,7 +54,7 @@ export class PlantListService {
      * @returns {Observable<R>} - the received Observable Plant collection
      */
     public getPlantsFromServer(): Observable<Plant[]> {
-        return this.http.request(API_URL + "plants").map(res => res.json());
+        return this.http.request(this.URL + "plants").map(res => res.json());
     }
 
     /**
@@ -63,7 +63,7 @@ export class PlantListService {
      * @returns {Observable<R>}
      */
     public getPlantById(id: string): Observable<Plant> {
-        return this.http.request(this.URL + "/" + id).map(res => res.json());
+        return this.http.request(this.URL + "plant/" + id).map(res => res.json());
     }
 
     /**

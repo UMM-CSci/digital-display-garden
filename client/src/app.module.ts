@@ -5,6 +5,7 @@ import { AppComponent }         from './app/app.component';
 import { routing } from './app/app.routes';
 import { FormsModule } from '@angular/forms';
 import { PipeModule } from './pipe.module';
+import {enableProdMode} from '@angular/core';
 
 import { NavbarComponent } from './app/navbar/navbar.component';
 import { GardenComponent } from "./app/garden/src/garden-component";
@@ -13,14 +14,24 @@ import { BedDropdownComponent } from "./app/garden/components/bed_dropdown/src/b
 
 import { PlantListService } from "./app/garden/components/plant_list/src/plant-list.service";
 import { BedDropdownService } from "./app/garden/components/bed_dropdown/src/bed-dropdown.service";
+import { CommonNameDropdownService } from "./app/garden/components/common_name_dropdown/src/common-name-dropdown.service";
+
+import { AdminComponent } from "./app/admin/src/admin.component";
+import {SlowLoginComponent} from "./app/admin/authentication/slow-login.component";
+import {AuthGuard} from "./app/admin/authentication/auth-guard";
+import {IncorrectAccountComponent} from "./app/admin/authentication/incorrect-account.component";
+import {ConfirmOptions, Position, ConfirmModule} from 'angular2-bootstrap-confirm';
+import {Positioning} from 'angular2-bootstrap-confirm/position';
+
 import { AdminComponent } from "./app/admin/admin.component";
 import { PlantComponent } from "./app/garden/components/plant_list/src/plant.component";
-import { ImportComponent } from "./app/admin/import.component";
-import { AdminService } from "./app/admin/admin.service";
-import { ExportComponent } from "./app/admin/export.component";
-import { FileUploadComponent } from "./app/admin/file-upload.component";
+import { ImportComponent } from "./app/admin/src/import.component";
+import { DeleteComponent } from "./app/admin/src/delete.component";
+import { AdminService } from "./app/admin/src/admin.service";
+import { ExportComponent } from "./app/admin/src/export.component";
+import { FileUploadComponent } from "./app/admin/src/file-upload.component";
 import { PlantService } from "./app/garden/components/plant_list/src/plant.service";
-import { GraphComponent } from "./app/admin/google-charts.component";
+import { GraphComponent } from "./app/admin/src/google-charts.component";
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 import { FilterGardenComponent } from "./app/garden/components/filter_garden_sidebar/src/filter-garden.component";
@@ -30,6 +41,7 @@ import { RouterModule } from "@angular/router";
 @NgModule({
     imports: [
         BrowserModule,
+        ConfirmModule,
         HttpModule,
         JsonpModule,
         routing,
@@ -50,16 +62,21 @@ import { RouterModule } from "@angular/router";
         AdminComponent,
         ImportComponent,
         ExportComponent,
+        DeleteComponent,
         FileUploadComponent,
         FooterComponent,
         GraphComponent,
+        IncorrectAccountComponent,
+        SlowLoginComponent,
 
     ],
     providers: [
         PlantListService,
         BedDropdownService,
         AdminService,
-        PlantService
+        PlantService,
+        {provide: 'CanAlwaysActivateGuard', useClass: AuthGuard},
+        AuthGuard,
     ],
     bootstrap: [ AppComponent ]
 })

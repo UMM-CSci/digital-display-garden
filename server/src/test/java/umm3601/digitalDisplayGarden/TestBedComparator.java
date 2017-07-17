@@ -9,11 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static umm3601.Server.API_URL;
 
-/**
- * Created by frazi177 on 4/13/17.
- */
 public class TestBedComparator
 {
 

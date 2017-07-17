@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +26,7 @@ import static umm3601.digitalDisplayGarden.QRCodes.*;
 public class TestQRCodes {
 
     String Test_Url = "http://localhost:2538" ;
-    String path = "test";
+    String path = "qrtest";
 
 
     @Test
@@ -73,13 +74,12 @@ public class TestQRCodes {
 
     @Test
     public void TestCreateBufferedImages() throws IOException,WriterException{
-        String bedURLs[] = new String[2];
+        String bedURLs[] = new String[1];
         bedURLs[0]= "http://localhost:2538/bed/bed1?qr=true";
-        bedURLs[1] = "http://localhost:2538/bed/bed2?qr=true";
         System.out.println(QRCodes.createBufferedImages(bedURLs).get(0));
 
         List<BufferedImage> qrCodeImages = new ArrayList<BufferedImage>();
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 1; i++) {
             qrCodeImages.add(createQRFromBedURL(bedURLs[i]));
         }
 
@@ -89,16 +89,14 @@ public class TestQRCodes {
 
     @Test
     public void TestWriteZipPathForQRCodes() throws IOException,WriterException{
-        String bedNames[] = new String[2];
+        String bedNames[] = new String[1];
         bedNames[0] = "bed1";
-        bedNames[1] = "bed2";
 
-        String bedURLs[] = new String[2];
+        String bedURLs[] = new String[1];
         bedURLs[0] = "http://localhost:2538/bed/bed1?qr=true";
-        bedURLs[1] = "http://localhost:2538/bed/bed2?qr=true";
         List<BufferedImage> qrCodeImages = QRCodes.createBufferedImages(bedURLs);
 
-        assertEquals(qrCodeImages.size(), 2);
+        assertEquals(qrCodeImages.size(), 1);
 
         QRCodes.writeBufferedImagesToFile(qrCodeImages,bedNames,this.path);
 
@@ -106,8 +104,9 @@ public class TestQRCodes {
 
         File f = new File(this.path);
         String files[] = f.list();
+        Arrays.sort(files);
         for(int i = 0; i < files.length; i++)
-            assertEquals("File names are equal to the bed names", files[i], bedNames[i] + ".png");
+            assertEquals("File names aren't equal to the bed names", bedNames[i] + ".png", files[i]);
 
 
         // Writes it to the right path.
@@ -121,16 +120,24 @@ public class TestQRCodes {
     {
         try {
             //Delete temp folder holding QRCodes
-            Path tempFolderPath = Paths.get(this.path);
-            if (Files.exists(tempFolderPath))
-                Files.delete(tempFolderPath);
-
-            //Delete QRCode zip file
-            File f = new File("./");
+            File f = new File(path);
             String files[] = f.list();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].endsWith(".zip") && files[i].startsWith("QR Code Export"))
-                    Files.delete(Paths.get(files[i]));
+            if(files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    Files.delete(Paths.get(path + "/" + files[i]));
+                }
+
+                Path tempFolderPath = Paths.get(this.path);
+                if (Files.exists(tempFolderPath))
+                    Files.delete(tempFolderPath);
+
+                //Delete QRCode zip file
+                f = new File("./");
+                files = f.list();
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].endsWith(".zip") && files[i].startsWith("QR Code Export"))
+                        Files.delete(Paths.get(files[i]));
+                }
             }
         }
         catch(Exception e)

@@ -22,6 +22,7 @@ import org.bson.BsonArray;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.print.Doc;
 //import sun.text.normalizer.UTF16;
@@ -178,37 +179,75 @@ public class ExcelParser {
 
     /**
     * Helper method for populateDatabase()
-    * looks at rows 2 through 4 (xlsx file is 1 based) and:
+    * looks at rows start through end (Remember: xlsx file is 1 based) and:
     * 1. Concatenates all content in rows 2 through 4 for a given column
     * 2. Adds all keys into a 1D string array
     * 3. Replaces certain key words so they match with the standard committee's requirements
-    * @param cellValues  
+    * @param cellValues
+    * @param keyrow_start The first row that will be concatenated into a key
+     * @param keyrow_end The last row that will be concatenated into a key
     */
-    public static String[] getKeys(String[][] cellValues){
+    public static String[] getKeys(String[][] cellValues, int keyrow_start, int keyrow_end){
         String[] keys = new String[cellValues[0].length];
 
         for(int i = 0; i < cellValues[0].length; i++){
-            keys[i] = cellValues[1][i];
-            for(int j = 2; j < 4; j++){
-                keys[i] = keys[i] + cellValues[j][i];
+            keys[i] = cellValues[1][i].replaceAll(" ", "").toUpperCase();
+            //With regards to the replaceAll, just trim() isn't what we want for easy
+            //comparison of the key strings. We want everything to be compressed as possible
+            //to limit the amount of cases to put in replaceKeyName(..) below.
+            for(int j = keyrow_start; j < keyrow_end; j++){
+                keys[i] = keys[i] + cellValues[j][i].replaceAll(" ", "").toUpperCase();
+                System.out.println(cellValues[j][i] + "][" + keys[i]);
             }
         }
 
         for (int i = 0; i < keys.length; i++){
-            if(keys[i].equals("#")) keys[i] = "id";
-            if(keys[i].equals("Common Name")) keys[i] = "commonName";
-            if(keys[i].equals("Cultivar")) keys[i] = "cultivar";
-            if(keys[i].equals("Source")) keys[i] = "source";
-            if(keys[i].equals("Garden  Location")) keys[i] = "gardenLocation";
-            if(keys[i].equals("Not Included")) keys[i] = "notIncluded";
-            if(keys[i].equals("not included")) keys[i] = "notIncluded";
-            if(keys[i].contains(" ")) keys[i] = keys[i].replace(" ","");
-            if(keys[i].contains("=")) keys[i] = keys[i].replace("=", "");
+            keys[i] = replaceKeyName(keys[i]);
             //if(keys[i].contains((UTF16.valueOf(0x00AE)))) keys[i].replaceAll(UTF16.valueOf(0x00AE), "");
-
         }
 
         return keys;
+    }
+
+    /**
+     * Match concatenated cell names with their database names
+     * @param token
+     * @return
+     */
+    private static String replaceKeyName(String token)
+    {
+        switch(token)
+        {
+            case "#":
+            case "ID":
+                return "id";
+
+            case "COMMONNAME":
+                return "commonName";
+
+            case "CULTIVAR":
+            case "CV":
+                return "cultivar";
+
+            case "SOURCE":
+            case "SRC":
+                return "source";
+
+            case "GARDENLOCATION":
+            case "BEDS":
+            case "BED":
+            case "LOCATION":
+                return "gardenLocation";
+
+            case "NOTINCLUDED":
+            case "NOTVISIBLE":
+                return "notIncluded";
+
+            case "=":
+                return "";
+        }
+
+        return token;
     }
 
     /**
@@ -232,8 +271,40 @@ public class ExcelParser {
     // Moves row by row through the 2D array and adds content for every flower paired with keys into a document
     // Uses the document to one at a time, add flower information into the database.
     public void populateDatabase(String[][] cellValues, String uploadId){
+
+        //Store this in case something breaks in upload and you need to regress.
+        String oldUploadId = getLiveUploadId(database);
+
+        //Spreadsheet population:
+        //Skip first row
+        //Rows until a number is found in the first column are concatenated into the keys.
+        //All rows from the first number until the last are entries
+
+        //Find the first number, which tells us how many cells are used for a header
+        int firstRow = 0;
+        for(int i = firstRow; i < cellValues.length && firstRow < 1; i++)
+        {
+            try
+            {
+                //Find the first number
+                Integer.parseUnsignedInt(cellValues[i][0]);
+                firstRow = i;
+            }
+            catch(NumberFormatException nfe)
+            {
+
+            }
+        }
+        if(firstRow < 1)
+        {
+            throw new RuntimeException("There were no accession numbers in the first column of the accession spreadsheet!");
+        }
+
         setLiveUploadId(uploadId, database);
-        String[] keys = getKeys(cellValues);
+        String[] keys = getKeys(cellValues, 2, firstRow);
+
+
+
 
         Document emptyMetadataDoc = new Document();
         emptyMetadataDoc.append("pageViews", 0);
@@ -246,7 +317,9 @@ public class ExcelParser {
         emptyMetadataBedDoc.append("bedVisits", new BsonArray());
         emptyMetadataBedDoc.append("qrVisits", new BsonArray());
 
-        for (int i = 4; i < cellValues.length; i++){
+
+
+        for (int i = firstRow; i < cellValues.length; i++){
             Document doc = new Document();
             boolean emptyBed = ignoreRow(keys,cellValues,i,"gardenLocation", "");
             boolean xed = ignoreRow(keys,cellValues,i,"notIncluded", "x");
@@ -256,6 +329,7 @@ public class ExcelParser {
                     doc.append(keys[j], cellValues[i][j]);
                 }
 
+                System.out.println(doc);
                 if (doc.get("gardenLocation").equals(""))
                     continue;
 
@@ -313,6 +387,7 @@ public class ExcelParser {
 
             Document newPlantFilter = new Document(filterByNewUploadId);
             newPlantFilter.put("id", oldPlant.getString("id"));
+            newPlantFilter.put("gardenLocation", oldPlant.getString("gardenLocation"));
 
             //Looks for a plant that has the same plantId with the new uploadId and migrates old metadata over
             //If a plant with no such plantId can be found, it will ignore it.
@@ -333,8 +408,8 @@ public class ExcelParser {
             //Only re-upload a comment if the plant it points to still exists
             Document newPlantFilter = new Document(filterByNewUploadId);
             newPlantFilter.put("id", comment.get("commentOnPlant"));
+            newPlantFilter.put("gardenLocation", comment.get("commentInBed"));
             if(plantCollection.find(newPlantFilter).first() != null) {
-
                 commentCollection.insertOne(comment);
             }
         }
@@ -350,6 +425,7 @@ public class ExcelParser {
             bedCollection.findOneAndUpdate(newBedFilter,set("metadata", oldMetadata));
         }
 
+        clearUpload(oldUploadId, database);
         setLiveUploadId(newUploadId, database);
     }
 

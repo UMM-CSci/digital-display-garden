@@ -16,11 +16,11 @@ Our system does not search for certain keys(categories), instead, it will add ev
 None of the information from the first row will be read into our system.
 
 ### First Column
-One of few assumptions we make about the format of the spreadsheet is that the first column has a value for every row in the spreadsheet. Beyond that the actual contents of the first row does not affect how the file will be parsed.
+One of few assumptions we make about the format of the spreadsheet is that the first column (The accession number, #, or plant ID) has a value for every row in the spreadsheet. Beyond that the actual contents of the first row does not affect how the file will be parsed.
 
 ### Ignoring Rows  
 The Accession List's primary use is for keeping track of flowers through out the WCROC staff, and there might be times in which a flower exists in the Accession List that you don't want on the website. For this reason, we will ignore a flower under two certain conditions:
-  1. If the garden location is blank, the flowr doesn't belong to a particular bed, so we will ignore it.
+  1. If the garden location is blank, the flower doesn't belong to a particular bed, so we will ignore it.
   2. You may use a column in your Excel Spreadsheet named `Not Included`.
   If there is a row you would like our system to ignore, put an **x** in the `Not Included` column of that row.  
 
