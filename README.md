@@ -1,5 +1,5 @@
 # Digital Display Garden
-[![Build Status](https://travis-ci.org/UMM-CSci/digital-display-garden.svg?branch=master)](https://travis-ci.org/UMM-CSci-3601-S17/digital-display-garden-iteration-4-revolverenguardia-1)  
+[![Build Status](https://travis-ci.org/UMM-CSci/digital-display-garden.svg?branch=master)  
 
 This is a project for the West Central Research Outreach Center (WCROC) in Morris Minnesota, to design software that would enhance visitor experience at their horticulture gardens, and provide feedback for WCROC. The Digital Display Garden allows visitors to learn more about the garden, and leave feedback for garden staff, all in a non-obtrusive, low footprint way that doesn't take away from aesthetics of the garden.  
 
@@ -9,8 +9,7 @@ In addition, The Digital Display Garden was designed with low maintenance in min
 
 The Digital Display Garden is due to enter service in the WCROC garden, during summer 2017, and will be further developed to improve visitor and staff experience alike. This project is made possible by the students, and faculty of C-SCI 3601, *Software Development and Design*, at University of Minnesota Morris, and by the staff of the West Central Research Outreach Center.
 
-You can find our website [here](http://revolverenguardia.dungeon.website)  
-Our IP address is: 138.197.120.23
+You can find the WCROC webpage running digital-display-garden [here](https://ddg.wcroc.umn.edu)  
 
 ## Digital Display Garden: Visitor View
 ![IMAGE ALT TEXT HERE](Documentation/Graphics/DigitalDisplayGarden.png)
@@ -48,6 +47,8 @@ We have an entire folder full of thorough documentation!
 * **zxing** is used for generating QR codes (supports reading them if we want)
 * **joda** is used for making an unique LiveUploadID
 * **Gradle** is used to build the project
+* **nimbus-jose-jwt** is used for interacting with JSON Web Tokens
+* **scribejava** is used for OAUTH 2.0 interaction
 
 ## Resources
 
