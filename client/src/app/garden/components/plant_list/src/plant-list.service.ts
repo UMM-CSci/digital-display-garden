@@ -26,12 +26,9 @@ export class PlantListService {
     // Plants to display within the PlantListComponent
     private filteredPlants: Plant[] = [];
 
-    // Current common name filter for plants within PlantListComponent
-    private commonNameFilter: string = PlantFilter.NO_FILTER;
-
     // Current bed filter for plants within PlantListComponent
     private bedFilter: string = PlantFilter.NO_FILTER;
-
+    private searchTerms: string = PlantFilter.NO_FILTER;
     constructor(private http:Http) {
         this.getPlantsFromServer().subscribe(
             plants => {
@@ -76,7 +73,7 @@ export class PlantListService {
 
         // Apply filters to plant list
         plantsBeingFiltered = PlantFilter.filterByBedName(this.bedFilter, plantsBeingFiltered);
-        plantsBeingFiltered = PlantFilter.filterByCommonName(this.commonNameFilter, plantsBeingFiltered);
+        plantsBeingFiltered = PlantFilter.filterByTerms(this.searchTerms, plantsBeingFiltered);
 
         // Bind the filtered plants to be displayed
         this.filteredPlants = plantsBeingFiltered;
@@ -117,11 +114,11 @@ export class PlantListService {
     }
 
     /**
-     * Filter the plants by the provided common name filter.
-     * @param commonNameFilter - common name to filter by
+     * Filter plants by arbitrary terms
+     * @param searchTerms - search terms to filter by
      */
-    public setCommonNameFilter(commonNameFilter: string): void{
-        this.commonNameFilter = commonNameFilter;
+    public setSearchTerms(searchTerms: string): void{
+        this.searchTerms = searchTerms;
         this.filterPlants();
     }
 
@@ -133,12 +130,6 @@ export class PlantListService {
         return this.bedFilter;
     }
 
-    /**
-     * Returns the current common name filter for the plants.
-     * @returns {string} - common name filter for plants
-     */
-    public getCommonNameFilter(): string{
-        return this.commonNameFilter;
-    }
+
 
 }
