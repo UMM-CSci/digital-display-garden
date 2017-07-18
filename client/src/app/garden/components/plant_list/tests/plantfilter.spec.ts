@@ -74,10 +74,10 @@ describe("Test Plant Filter", () => {
         let filteredPlants: Plant[] = PlantFilter.filterByTerms("altiva BedName", plants);
         expect(filteredPlants.length).toBe(3);
 
-        filteredPlants = PlantFilter.filterByCommonName("CommonName2", plants);
+        filteredPlants = PlantFilter.filterByTerms("CommonName2", plants);
         expect(filteredPlants.length).toBe(3);
 
-        filteredPlants = PlantFilter.filterByCommonName("Cultivar Name1", plants);
+        filteredPlants = PlantFilter.filterByTerms("Cultivar Name1", plants);
         expect(filteredPlants.length).toBe(1);
     });
 
