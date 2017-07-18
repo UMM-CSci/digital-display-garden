@@ -50,22 +50,33 @@
                     box-shadow: 0px 7px 23px 0px rgba(82,82,82,1);
                 }
             }
-            .plant-list-header {
-                font-family: "Open Sans Condensed";
+            .plant-table-header {
                 font-weight: 300;
-                font-size: 2em;
+                font-size: 1.5em;
                 color: #ffffff;
-                line-height: 1em;
                 background-color: #283d1c;
                 padding: 0.4em 0em;
+
+                width:100%;
+                z-index: 2;
+
+            }
+            .plant-list-header-text {
+                font-family: "Open Sans Condensed";
+                font-weight: 300;
+                line-height: 1em;
+                color: #ffffff;
+                background-color: #283d1c;
+                z-index: 2;
+                position:absolute;
+                width: 50%;
             }
             .plant-list-body {
                 background-color: #ffffff;
                 overflow: scroll;
                 overflow-x: hidden;
-                height: 70%;
             }
-            .plant-list-body a {
+            .plant-list-body tr {
                 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
                 font-style: normal;
                 font-size: 1.5em;
@@ -73,10 +84,10 @@
                 color: #3b3b3b;
                 text-decoration: none;
             }
-            .plant-list-body li {
+            .plant-list-body tr {
                 padding: 1.5em 0em;
             }
-            .plant-list-body li:hover {
+            .plant-list-body tr:hover {
                 background-color: #cccccc;
             }
             .common-name {
@@ -89,27 +100,36 @@
     </head>
 
     <div class="row-plant-list">
+    <div style="position:relative">
+        <div style="height:70%; overflow: scroll">
 
-        <div class="plant-list-header">
-            Plants
-        </div>
+        <table class="text-center" style="width: 100%">
+            <thead class="plant-table-header" style="width: 100%">
+                <tr>
+                    <th> <span class="text-center plant-list-header-text" style="width: 80%;">Plants</span></th>
+                    <th> <span class="text-center plant-list-header-text" style="width: 10%">Bed</span></th>
+                </tr>
+            </thead>
 
-        <div class="plant-list-body">
-            <ul>
-                <li *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.gardenLocation, plant.id]">
-                    <a>
+            <tbody class="plant-list-body">
+                <tr  *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.gardenLocation, plant.id]">
+                    <td>
                         <span class="common-name"> {{ plant.commonName }}</span>
                         <br>
                         <span class="cultivar">{{ plant.cultivar}}</span>
-                    </a>
-                </li>
-            </ul>
+                    </td>
+                    <td>
+                        <span>{{plant.gardenLocation}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         </div>
-
         <div class="footer">
             <footer-component></footer-component>
         </div>
 
+    </div>
     </div>
 
 </html>
