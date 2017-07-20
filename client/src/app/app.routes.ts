@@ -5,6 +5,7 @@ import {GardenComponent} from "./garden/src/garden-component";
 import {AdminComponent} from "./admin/src/admin.component";
 import {ImportComponent} from "./admin/src/import.component";
 import {ExportComponent} from "./admin/src/export.component";
+import {PhotoComponent} from "./admin/src/photo.component";
 import {DeleteComponent} from "./admin/src/delete.component";
 import {GraphComponent} from "./admin/src/google-charts.component";
 import {PlantComponent} from "./garden/components/plant_list/src/plant.component";
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: 'admin', component: AdminComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/importData', component: ImportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/exportData', component: ExportComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
+    { path: 'admin/managePhotos', component: PhotoComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/deleteData', component: DeleteComponent, canActivate: ['CanAlwaysActivateGuard', AuthGuard]},
     { path: 'admin/graph', component: GraphComponent},
     { path: 'admin/incorrectAccount', component: IncorrectAccountComponent},

@@ -32,7 +32,7 @@ describe("Test PlantListComponent", () => {
                     cultivar: "Cultivar1",
                     source: "Source1",
                     gardenLocation: "BedName1",
-
+                    photoPath: ""
                 },
                 {
                     id: "PlantID2",
@@ -40,6 +40,7 @@ describe("Test PlantListComponent", () => {
                     cultivar: "Cultivar2,",
                     source: "Source2,",
                     gardenLocation: "BedName2,",
+                    photoPath: ""
                 },
                 {
                     id: "PlantID3",
@@ -47,6 +48,7 @@ describe("Test PlantListComponent", () => {
                     cultivar: "Cultivar3",
                     source: "Source3",
                     gardenLocation: "BedName3",
+                    photoPath: ""
                 }
                 ])
         };

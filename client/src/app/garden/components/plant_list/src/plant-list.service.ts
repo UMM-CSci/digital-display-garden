@@ -62,9 +62,15 @@ export class PlantListService {
      * @param id
      * @returns {Observable<R>}
      */
-    public getPlantById(id: string): Observable<Plant> {
-        return this.http.request(this.URL + "plant/" + id).map(res => res.json());
+    public getPlantById(id: string, bed : string, reportVisit : boolean): Observable<Plant> {
+        if(reportVisit) {
+            return this.http.request(this.URL + "plant/" + bed + "/" + id).map(res => res.json());
+        }
+        else {
+            return this.http.request(this.URL + "plant/" + bed + "/" + id + "?visitor=false").map(res => res.json());
+        }
     }
+
 
     /**
      * Requests that the PlantListComponent be updated according to the currently set filters.

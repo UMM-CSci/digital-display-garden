@@ -29,7 +29,7 @@ export class PlantComponent implements OnInit {
     private commented: Boolean = false;
 
     // Placeholder plant for loading Plant data for the PlantComponent
-    private plant: Plant = {id: "", commonName: "", cultivar: "", source: "", gardenLocation: ""};
+    private plant: Plant = {id: "", commonName: "", cultivar: "", source: "", gardenLocation: "", photoPath:""};
 
     // Tracks the feedback for the current plant
     private plantFeedback: PlantFeedback = new PlantFeedback();

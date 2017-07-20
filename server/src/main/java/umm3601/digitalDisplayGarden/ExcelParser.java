@@ -335,6 +335,7 @@ public class ExcelParser {
 
                 // Initialize the empty metadata
                 doc.append("metadata", emptyMetadataDoc);
+                doc.append("photoPath", "");
                 doc.append("uploadId", uploadId);
                 plantCollection.insertOne(doc);
             }

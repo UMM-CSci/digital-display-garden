@@ -18,11 +18,11 @@ describe("Test Common Name Filter", () => {
     it("Test Filter Common Names By Bed", () => {
 
         let plants: Plant[] = [];
-        plants.push(new Plant("PlantID1", "CommonName1", "Cultivar1", "Source1", "Bed1"));
-        plants.push(new Plant("PlantID2", "CommonName2", "Cultivar2", "Source2", "Bed1"));
-        plants.push(new Plant("PlantID3", "CommonName3", "Cultivar3", "Source3", "Bed2"));
-        plants.push(new Plant("PlantID4", "CommonName2", "Cultivar4", "Source4", "Bed1"));
-        plants.push(new Plant("PlantID5", "CommonName1", "Cultivar5", "Source5", "Bed3"));
+        plants.push(new Plant("PlantID1", "CommonName1", "Cultivar1", "Source1", "Bed1", ".photos/someUploadId/10/12345.jpg"));
+        plants.push(new Plant("PlantID2", "CommonName2", "Cultivar2", "Source2", "Bed1", ""));
+        plants.push(new Plant("PlantID3", "CommonName3", "Cultivar3", "Source3", "Bed2", ""));
+        plants.push(new Plant("PlantID4", "CommonName2", "Cultivar4", "Source4", "Bed1",""));
+        plants.push(new Plant("PlantID5", "CommonName1", "Cultivar5", "Source5", "Bed3", ""));
 
         let commonNames: CommonName[] = [];
         let commonName1: CommonName = new CommonName("CommonName1"),
