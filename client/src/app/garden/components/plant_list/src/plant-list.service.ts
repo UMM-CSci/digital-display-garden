@@ -67,7 +67,7 @@ export class PlantListService {
             return this.http.request(this.URL + "plant/" + bed + "/" + id).map(res => res.json());
         }
         else {
-            return this.http.request(this.URL + "plant/" + bed + "/" + id + "?visitor=false").map(res => res.json());
+            return this.http.request(this.URL + "plant/" + bed + "/" + id + "?visitor=fa").map(res => res.json());
         }
     }
 

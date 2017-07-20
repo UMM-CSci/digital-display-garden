@@ -16,6 +16,7 @@ export class PhotoComponent implements OnInit {
     public plant: Plant;
     public clicked: boolean;
     public textValue: string;
+    searchTerms : string;
     authorized: boolean;
 
     private readonly URL: string = process.env.API_URL;
@@ -41,6 +42,14 @@ export class PhotoComponent implements OnInit {
             }
         );
 
+    }
+
+    private handleSearchTerms(searchTerms): void{
+
+        //this.location.replaceState("/bed/" + searchTerms);
+
+        // Filter plant list
+        //this.plantListService.setSearchTerms(searchTerms); //TODO
     }
 
     public getPlant(id: string, bed: string): void {

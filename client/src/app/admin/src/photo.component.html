@@ -7,9 +7,25 @@
     <button (click)="getPlant(textbox.value, this.bed)" value = "clicked" class="btn btn-primary">Find</button>
 </div>
 
+<div class="searchField col-xs-8">
+    <input type="text" [ngModel]="searchTerms" (ngModelChange)="handleSearchTerms($event)" placeholder="Find a flower by name or bed" class="form-control search-field"/> {{searchTerms}}
+</div>
+
+<div class="plant-list-body">
+    <ul>
+        <li *ngFor="let plant of plantListService.getFilteredPlants()" [routerLink]="['/plant', plant.gardenLocation, plant.id]">
+            <a>
+                <span class="common-name"> {{ plant.commonName }}</span>
+                <br>
+                <span class="cultivar">{{ plant.cultivar}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
     <div *ngIf="plant">
         <br>
-        <u><strong>Plant</strong></u><br>
+        <u><strong>Selected Plant</strong></u><br>
         <strong>Common Name:</strong> {{plant.commonName}}<br>
         <strong>Cultivar:</strong> {{plant.cultivar}}<br>
         <br>
@@ -44,7 +60,5 @@
 </div>
 
 <style>
-    .photo-page {
-        margin-top: -115px;
-    }
+
 </style>
