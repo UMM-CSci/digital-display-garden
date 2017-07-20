@@ -22,7 +22,7 @@ export class PlantFilter {
      */
     public static filterByBedName(bedName: string, plants: Plant[]): Plant[]{
 
-        // If do not filter original plant list
+        // If there is no filter do not filter original plant list
         if(bedName == PlantFilter.NO_FILTER)
             return plants;
 
@@ -46,7 +46,7 @@ export class PlantFilter {
      */
     public static filterByCommonName(commonName: string, plants: Plant[]): Plant[]{
 
-        // If do not filter original plant list
+        // If there is no filter do not filter original plant list
         if(commonName == PlantFilter.NO_FILTER)
         // Return original plant list
             return plants;
@@ -63,16 +63,19 @@ export class PlantFilter {
     }
 
     /**
-     * Filters the provided plant collection by the provided common name.
+     * Filters the provided plant collection by the provided terms
+     * Filters for plants where each of the terms match a substring
+     * of the plant's cultivar, common name, or bed.
+     *
      * @param terms - the search terms to filter by
      * @param plants - the plants array to filter
      * @returns {Plant[]} - the filtered plant array
      */
     public static filterByTerms(terms: string, plants: Plant[]): Plant[]{
 
-        // If do not filter original plant list
-        if(terms == PlantFilter.NO_FILTER)
+        // If there is no filter do not filter original plant list
         // Return original plant list
+        if(terms == PlantFilter.NO_FILTER)
             return plants;
 
         // Else, apply filter
