@@ -88,17 +88,17 @@ export class PlantFilter {
 
             //A plant passes on if ALL of the terms match something:
             //Common name, cultivar or bed
-            let b : number = 0;
+            let matches : number = 0;
             termList.forEach((term, index) =>
             {
                 term = term.toLocaleLowerCase();
                 if (plant.commonName.toLocaleLowerCase().includes(term) ||
                     plant.cultivar.toLocaleLowerCase().includes(term) ||
                     plant.gardenLocation.toLocaleLowerCase().includes(term)) //Beds have letters sometimes
-                    b++;
+                    matches++;
             });
 
-            if(b == termList.length)
+            if(matches == termList.length)
                 filteredPlants.push(plant);
         });
 
