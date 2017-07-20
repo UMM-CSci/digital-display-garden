@@ -269,8 +269,9 @@
 
 
         <!--image starts here-->
-        <div class="garden-img">
-            <img src="../res/wroc.jpg">
+        <div  *ngIf="plant.photoPath" style="resize: vertical; width: 100%">
+            <img [attr.src]="this.URL + 'plant/' + plant.gardenLocation + '/' + plant.id + '/getPhoto'" width = "100%">
+            <br>
         </div>
         <!--image ends here-->
 

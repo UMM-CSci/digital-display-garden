@@ -15,7 +15,6 @@ export class PhotoComponent implements OnInit {
     public bed: string;
     public plant: Plant;
     public clicked: boolean;
-    public fileLocation: string;
     public textValue: string;
     authorized: boolean;
 
@@ -31,7 +30,7 @@ export class PhotoComponent implements OnInit {
     uploadAttempted:boolean = false;
 
     handleUpload(){
-        this.fu.uploadPhoto(this.id, "10").subscribe( //TODO Bed is set to 10 specifically right now.
+        this.fu.uploadPhoto(this.id, this.bed).subscribe(
             response => {
                 this.filename = response.json();
                 this.uploadAttempted = true;
@@ -50,7 +49,6 @@ export class PhotoComponent implements OnInit {
         this.clicked = true;
         this.id = id;
         this.bed = bed;
-        this.fileLocation = ".plants/" + id + ".png";
         this.plantListService.getPlantById(id, bed, false).subscribe(
             plant => this.plant = plant,
             err => {
@@ -60,7 +58,7 @@ export class PhotoComponent implements OnInit {
 
     private onKey(event: any) {
         if (event.key === "Enter") {
-            this.getPlant(this.textValue, "10"); //TODO Bed is set to 10 specifically right now.
+            this.getPlant(this.textValue, this.bed);
         }
     }
 
