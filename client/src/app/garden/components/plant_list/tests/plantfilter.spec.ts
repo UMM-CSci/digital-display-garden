@@ -58,4 +58,27 @@ describe("Test Plant Filter", () => {
         expect(filteredPlants.length).toBe(1);
     });
 
+    /**
+     * Tests proper filtering by common name.
+     * @author Iteration 3 - Team Revolver en Guardia
+     */
+    it("Filter by Search Terms", () => {
+        let plants: Plant[] = [];
+        plants.push(new Plant("PlantID1", "CommonName1", "Cultivar1", "Source1", "BedName1"));
+        plants.push(new Plant("PlantID2", "CommonName1", "Caltivar2", "Source2", "BedName2"));
+        plants.push(new Plant("PlantID3", "CommonName2", "Cultivar3", "Source3", "BedName3"));
+        plants.push(new Plant("PlantID4", "CommonName3", "Caltivar2", "Source4", "BedName4"));
+        plants.push(new Plant("PlantID5", "CommonName2", "Cultivar3", "Source5", "BedName5"));
+        plants.push(new Plant("PlantID6", "CommonName2", "Caltivar3", "Source6", "BedName6"));
+
+        let filteredPlants: Plant[] = PlantFilter.filterByTerms("altiva BedName", plants);
+        expect(filteredPlants.length).toBe(3);
+
+        filteredPlants = PlantFilter.filterByTerms("CommonName2", plants);
+        expect(filteredPlants.length).toBe(3);
+
+        filteredPlants = PlantFilter.filterByTerms("Cultivar Name1", plants);
+        expect(filteredPlants.length).toBe(1);
+    });
+
 });

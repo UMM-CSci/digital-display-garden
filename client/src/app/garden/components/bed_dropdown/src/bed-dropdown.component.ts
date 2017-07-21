@@ -9,8 +9,6 @@ import {Component, OnInit} from "@angular/core";
 import {BedDropdownService} from "./bed-dropdown.service";
 import {PlantListService} from "../../plant_list/src/plant-list.service";
 import {PlantFilter} from "../../plant_list/src/plantfilter";
-import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-name-dropdown.service";
-import {ActivatedRoute} from "@angular/router";
 import {Location} from '@angular/common';
 
 @Component({
@@ -23,7 +21,6 @@ export class BedDropdownComponent implements OnInit{
 
     constructor(private bedListService: BedDropdownService,
                 private plantListService: PlantListService,
-                private commonNameListService: CommonNameDropdownService,
                 private location: Location) { }
 
     /**
@@ -34,10 +31,6 @@ export class BedDropdownComponent implements OnInit{
         this.location.replaceState("/bed/" + bedName);
         // Filter plant list
         this.plantListService.setBedFilter(bedName);
-
-        // Common name drop only have common names within current bed
-        this.commonNameListService.updateCommonNamesDropdown(this.plantListService.getPlants(), bedName);
-
 
         this.bedListService.reportBedVisit(bedName, false).subscribe();
     }

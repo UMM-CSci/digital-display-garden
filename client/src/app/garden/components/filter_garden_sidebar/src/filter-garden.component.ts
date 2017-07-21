@@ -6,7 +6,8 @@
  */
 import { Component } from '@angular/core';
 import {BedDropdownService} from "../../bed_dropdown/src/bed-dropdown.service";
-import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-name-dropdown.service";
+import {PlantListService} from "../../plant_list/src/plant-list.service"
+import {Location} from '@angular/common';
 
 @Component({
     selector: 'filter-garden-component',
@@ -14,9 +15,18 @@ import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-n
 })
 
 export class FilterGardenComponent {
+    private searchTerms : string;
 
-    constructor(private bedListService: BedDropdownService,
-                private commonNameListService: CommonNameDropdownService){ }
+    constructor(private bedListService: BedDropdownService,private plantListService: PlantListService,
+                private location: Location){ }
 
+
+    private handleSearchTerms(searchTerms): void{
+
+        //this.location.replaceState("/bed/" + searchTerms);
+
+        // Filter plant list
+        this.plantListService.setSearchTerms(searchTerms);
+    }
 }
 
