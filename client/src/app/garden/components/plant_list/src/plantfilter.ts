@@ -75,13 +75,12 @@ export class PlantFilter {
 
         // If there is no filter do not filter original plant list
         // Return original plant list
-        if(terms == PlantFilter.NO_FILTER)
+        if(terms == PlantFilter.NO_FILTER || terms == "")
             return plants;
 
         // Else, apply filter
         let filteredPlants: Plant[] = [];
         let termList = terms.split(" ");
-        console.log(termList);
 
         plants.forEach((plant, index) => {
             //Loop through terms,

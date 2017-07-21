@@ -13,6 +13,7 @@ import { Plant } from './plant';
 import { Observable } from "rxjs";
 import {PlantCollection} from "./plantcollection";
 import {PlantFilter} from "./plantfilter";
+import {isUndefined} from "util";
 
 @Injectable()
 export class PlantListService {
@@ -28,7 +29,7 @@ export class PlantListService {
 
     // Current bed filter for plants within PlantListComponent
     private bedFilter: string = PlantFilter.NO_FILTER;
-    private searchTerms: string = PlantFilter.NO_FILTER;
+    public searchTerms: string = ""; //This is public so that it can be bound within filter-garden-component
     constructor(private http:Http) {
         this.getPlantsFromServer().subscribe(
             plants => {
@@ -67,7 +68,7 @@ export class PlantListService {
      * Requests that the PlantListComponent be updated according to the currently set filters.
      */
     private filterPlants(): void{
-        console.log(this.bedFilter);
+
         // Filter from the master plant collection
         let plantsBeingFiltered: Plant[] = this.plantCollection.getPlants();
 
@@ -97,7 +98,9 @@ export class PlantListService {
      */
     public setBedFilter(bedFilter: string): void{
         this.bedFilter = bedFilter;
-        this.filterPlants();
+        if(!isUndefined(this.plantCollection)) {
+            this.filterPlants();
+        }
     }
 
     /**
@@ -118,8 +121,23 @@ export class PlantListService {
      * @param searchTerms - search terms to filter by
      */
     public setSearchTerms(searchTerms: string): void{
-        this.searchTerms = searchTerms;
-        this.filterPlants();
+        if(isUndefined(searchTerms)) {
+            this.searchTerms = "";
+        }
+        else {
+            this.searchTerms = searchTerms;
+        }
+
+        this.refreshSearchTerms();
+    }
+
+    /**
+    Filter plants according to the current SearchTerms
+     */
+    public refreshSearchTerms(): void{
+        if(!isUndefined(this.plantCollection)) {
+            this.filterPlants();
+        }
     }
 
     /**
@@ -128,6 +146,10 @@ export class PlantListService {
      */
     public getBedFilter(): string{
         return this.bedFilter;
+    }
+
+    public getSearchTerms(): string{
+        return this.searchTerms;
     }
 
 
