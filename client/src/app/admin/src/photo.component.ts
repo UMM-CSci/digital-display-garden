@@ -11,11 +11,8 @@ import { Location } from '@angular/common';
     templateUrl: 'photo.component.html',
 })
 export class PhotoComponent implements OnInit {
-    public id: string;
-    public bed: string;
     public plant: Plant;
     public clicked: boolean;
-    public textValue: string;
     searchTerms : string;
     authorized: boolean;
 
@@ -31,11 +28,15 @@ export class PhotoComponent implements OnInit {
     uploadAttempted:boolean = false;
 
     handleUpload(){
-        this.fu.uploadPhoto(this.id, this.bed).subscribe(
+        this.fu.uploadPhoto(this.plant.id, this.plant.gardenLocation).subscribe(
             response => {
                 this.filename = response.json();
                 this.uploadAttempted = true;
-                location.reload();
+                this.plantListService.refreshPlant(this.plant.id, this.plant.gardenLocation)
+                    .add(res => {
+                    this.plant = this.plantListService.getPlant(this.plant.id, this.plant.gardenLocation);
+                });
+                //location.reload();
             },
             err => {
                 this.uploadAttempted = true;
@@ -49,40 +50,47 @@ export class PhotoComponent implements OnInit {
         //this.location.replaceState("/bed/" + searchTerms);
 
         // Filter plant list
-        //this.plantListService.setSearchTerms(searchTerms); //TODO
+        this.plantListService.setSearchTerms(searchTerms);
     }
 
-    public getPlant(id: string, bed: string): void {
+    private listEntryClicked(plant : Plant)
+    {
+        this.plant = plant;
         this.uploadAttempted = false;
         this.filename = undefined;
         this.clicked = true;
-        this.id = id;
-        this.bed = bed;
-        this.plantListService.getPlantById(id, bed, false).subscribe(
-            plant => this.plant = plant,
-            err => {
-                console.log(err);
-            })
     }
 
-    private onKey(event: any) {
-        if (event.key === "Enter") {
-            this.getPlant(this.textValue, this.bed);
-        }
-    }
+    // public getPlant(id: string, bed: string): void {
+    //     this.uploadAttempted = false;
+    //     this.filename = undefined;
+    //     this.clicked = true;
+    //     this.plantListService.getPlantById(id, bed, false).subscribe(
+    //         plant => this.plant = plant,
+    //         err => {
+    //             console.log(err);
+    //         })
+    // }
 
     ngOnInit(): void {
-        this.route.queryParams.subscribe((params: Params) => {this.textValue = params['query'];
-        if(this.textValue !== ""){
-            this.getPlant(this.textValue, "10"); //TODO Bed is set to 10 specifically right now.
-            this.clicked = false;
-        }
-        });
+
+        this.route.queryParams.subscribe(
+            qparams => {
+                this.route.params.subscribe(params => {
+/*
+                    this.searchTerms = qparams['query'];
+                    if(this.searchTerms !== ""){
+                        this.getPlant(, params['bed']); //TODO Bed is set to 10 specifically right now.
+                        this.clicked = false;
+                    }*/
+                })
+            }
+        );
         this.adminService.authorized().subscribe(authorized => this.authorized = authorized);
 
     }
-
+/*
     refresh(id: string) {
         this.router.navigate(['/admin/managePhotos'], { queryParams: { query: this.id} });
-    }
+    }*/
 }

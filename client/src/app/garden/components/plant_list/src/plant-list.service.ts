@@ -98,6 +98,10 @@ export class PlantListService {
         return this.plantCollection.getPlants();
     }
 
+    public getPlant(id : string, bed : string): Plant{
+        return this.plantCollection.getPlant(id, bed);
+    }
+
     /**
      * Filter the plants by the provided bed filter.
      * @param bedFilter - bed to filter by
@@ -144,6 +148,19 @@ export class PlantListService {
         if(!isUndefined(this.plantCollection)) {
             this.filterPlants();
         }
+    }
+
+    /**
+     * Refresh one plant's information from db
+     * and replace existing information
+     * @param id
+     * @param bed
+     */
+    public refreshPlant(id : string, bed : string){
+        return this.getPlantById(id, bed, false).subscribe(plant => {
+            this.plantCollection.updatePlant(plant);
+            this.filterPlants();
+        });
     }
 
     /**
