@@ -29,4 +29,4 @@ ln -s "$DEPLOYMENT_CONFIG_PATH" ~/"server_$1/config.properties"
 
 #Run the server
 cd ~/"server_$1"
-"bin/server_$1"
+bin/server
