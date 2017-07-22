@@ -15,7 +15,7 @@ rm "~/server_$1.tar"
 #Rebuild the project and extract it to home
 ./gradlew build
 cp server/build/distributions/server.tar "~/server_$1.tar"
-tar xvf "~/server_$!.tar" -C ~
+tar xvf "~/server_$1.tar" -C ~
 sleep 1
 
 mv server "server_$1"
