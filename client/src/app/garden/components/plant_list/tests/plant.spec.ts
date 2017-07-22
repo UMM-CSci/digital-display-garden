@@ -28,13 +28,13 @@ describe("Test Plant Class", () => {
         expect(plant2.cultivar).toBe("Cultivar2");
         expect(plant2.source).toBe("Source2");
         expect(plant2.gardenLocation).toBe("GardenLocation2");
-        expect(plant1.photoPath).toBe("");
+        expect(plant2.photoPath).toBe("");
 
         expect(plant3.id).toBe("PlantID3");
         expect(plant3.commonName).toBe("CommonName3");
         expect(plant3.cultivar).toBe("Cultivar3");
         expect(plant3.source).toBe("Source3");
         expect(plant3.gardenLocation).toBe("GardenLocation3");
-        expect(plant1.photoPath).toBe(".photos/someUploadId/10/12345.jpg");
+        expect(plant3.photoPath).toBe(".photos/someUploadId/10/12345.jpg");
     });
 });
