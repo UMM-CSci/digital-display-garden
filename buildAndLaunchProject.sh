@@ -14,20 +14,19 @@ rm "~/server_$1.tar"
 
 #Rebuild the project and extract it to home
 ./gradlew build
-cp server/build/distributions/server.tar ~/server_$1.tar
-tar xvf ~/server.tar -C ~
+cp server/build/distributions/server.tar "~/server_$1.tar"
+tar xvf "~/server_$!.tar" -C ~
 sleep 1
 
-mv server server_$1
+mv server "server_$1"
 
 #Maintain the configuration and authentication files
 AUTH_USERS_PATH="`pwd`/server/authorized.users"
 DEPLOYMENT_CONFIG_PATH="`pwd`/server/config.properties.deployment"
 
-ln -s "$AUTH_USERS_PATH" ~/server_$1/authorized.users
-ln -s "$DEPLOYMENT_CONFIG_PATH" ~/server_$1/config.properties
+ln -s "$AUTH_USERS_PATH" "~/server_$1/authorized.users"
+ln -s "$DEPLOYMENT_CONFIG_PATH" "~/server_$1/config.properties"
 
 #Run the server
-cd ~/server_$1
-bin/server_$1
-
+cd "~/server_$1"
+"bin/server_$1"
