@@ -7,13 +7,14 @@ import org.bson.Document;
 import spark.Route;
 import spark.utils.IOUtils;
 import com.mongodb.util.JSON;
-import umm3601.digitalDisplayGarden.*;
 import umm3601.digitalDisplayGarden.Authentication.Auth;
 import umm3601.digitalDisplayGarden.Authentication.Cookie;
 import umm3601.digitalDisplayGarden.Authentication.ExpiredTokenException;
 import umm3601.digitalDisplayGarden.Authentication.UnauthorizedUserException;
+import umm3601.digitalDisplayGarden.BedController;
+import umm3601.digitalDisplayGarden.GardenCharts;
+import umm3601.digitalDisplayGarden.PlantController;
 
-import java.awt.image.RenderedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,7 +27,9 @@ import java.util.TimeZone;
 
 import static spark.Spark.*;
 
-import javax.imageio.ImageIO;
+import umm3601.digitalDisplayGarden.ExcelParser;
+import umm3601.digitalDisplayGarden.QRCodes;
+
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
@@ -68,7 +71,6 @@ public class Server {
         database = client.getDatabase(databaseName);
 
         PlantController plantController = new PlantController(database);
-        Photos photos = new Photos(database.getCollection("plants"), plantController);
         GardenCharts chartMaker = new GardenCharts(database);
         BedController bedController = new BedController(database);
         Auth auth = new Auth(clientId, clientSecret, callbackURL);
@@ -208,26 +210,9 @@ public class Server {
         //Get a plant by plantId
         get("api/plant/:bed/:plantID", (req, res) -> {
             res.type("application/json");
-            String plant;
             String id = req.params("plantID");
             String bed = req.params("bed");
-            String isVisitor = req.queryParams("visitor");
-
-            if(isVisitor == null)
-                plant = plantController.getPlantByPlantID(id, bed, false, getLiveUploadId());
-            else
-                plant = plantController.getPlantByPlantID(id, bed, isVisitor.equals("false"), getLiveUploadId());
-
-            return plant;
-        });
-
-        get("api/plant/:bed/:plantID/getPhoto", (req,res) ->{
-            res.type("application/png");
-            plantController.getPlantPhoto(res.raw().getOutputStream(),
-                    req.params("plantID"),
-                    req.params("bed"),
-                    getLiveUploadId());
-            return res;
+            return plantController.getPlantByPlantID(id, bed, getLiveUploadId());
         });
 
         //Get feedback counts for a plant
@@ -457,25 +442,6 @@ public class Server {
                 }
                 return res;
             }
-        });
-
-        post("api/admin/plant/:bed/:plantID/importPhoto",(req,res) ->{
-            String cookie = req.cookie("ddg");
-            if(!auth.authorized(cookie)) {
-                halt(403);
-            }
-
-            res.type("application/json");
-
-            MultipartConfigElement multipartConfigElement = new MultipartConfigElement(excelTempDir);
-            req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-            Part part = req.raw().getPart("file[]");
-            RenderedImage photo = ImageIO.read(part.getInputStream());
-
-            String id = req.params("plantID");
-            String bed = req.params("bed");
-
-            return photos.savePhoto(id, bed, photo, getLiveUploadId());
         });
 
         // List all uploadIds

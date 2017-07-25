@@ -29,12 +29,11 @@ export class PlantComponent implements OnInit {
     private commented: Boolean = false;
 
     // Placeholder plant for loading Plant data for the PlantComponent
-    private plant: Plant = {id: "", commonName: "", cultivar: "", source: "", gardenLocation: "", photoPath:""};
+    private plant: Plant = {id: "", commonName: "", cultivar: "", source: "", gardenLocation: ""};
 
     // Tracks the feedback for the current plant
     private plantFeedback: PlantFeedback = new PlantFeedback();
 
-    private readonly URL: string = process.env.API_URL;
 
     /**
      * Creates a new PlantComponent that uses a PlantService for requesting Plant data. Also,
