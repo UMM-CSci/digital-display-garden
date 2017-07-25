@@ -60,9 +60,15 @@ export class PlantListService {
      * @param id
      * @returns {Observable<R>}
      */
-    public getPlantById(id: string): Observable<Plant> {
-        return this.http.request(this.URL + "plant/" + id).map(res => res.json());
+    public getPlantById(id: string, bed : string, reportVisit : boolean): Observable<Plant> {
+        if(reportVisit) {
+            return this.http.request(this.URL + "plant/" + bed + "/" + id).map(res => res.json());
+        }
+        else {
+            return this.http.request(this.URL + "plant/" + bed + "/" + id + "?visitor=fa").map(res => res.json());
+        }
     }
+
 
     /**
      * Requests that the PlantListComponent be updated according to the currently set filters.
@@ -92,6 +98,10 @@ export class PlantListService {
         return this.plantCollection.getPlants();
     }
 
+    public getPlant(id : string, bed : string): Plant{
+        return this.plantCollection.getPlant(id, bed);
+    }
+
     /**
      * Filter the plants by the provided bed filter.
      * @param bedFilter - bed to filter by
@@ -119,6 +129,7 @@ export class PlantListService {
     /**
      * Filter plants by arbitrary terms
      * @param searchTerms - search terms to filter by
+
      */
     public setSearchTerms(searchTerms: string): void{
         if(isUndefined(searchTerms)) {
@@ -138,6 +149,20 @@ export class PlantListService {
         if(!isUndefined(this.plantCollection)) {
             this.filterPlants();
         }
+    }
+
+    /**
+     * Refresh one plant's information from db
+     * and replace existing information
+     * @param id
+     * @param bed
+     */
+    public refreshPlant(id : string, bed : string){
+        return this.getPlantById(id, bed, false).subscribe(plant => {
+            this.plantCollection.updatePlant(plant);
+            this.filterPlants();
+        });
+
     }
 
     /**

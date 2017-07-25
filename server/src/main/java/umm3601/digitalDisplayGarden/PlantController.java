@@ -12,6 +12,10 @@ import org.bson.types.ObjectId;
 
 import org.bson.conversions.Bson;
 
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.OutputStream;
 import java.util.Iterator;
 
@@ -110,6 +114,8 @@ public class PlantController {
      *  "plantID"        : String,
      *  "commonName" : String,
      *  "cultivar"   : String
+     *  "gardenLocation" : String
+     *  "photoPath" : String
      * }
      * </code>
      *
@@ -122,10 +128,11 @@ public class PlantController {
      *
      * @param plantID an ID number of a plant in the DB
      * @param gardenLocation the location in the garden to find the plant in
+     * @param admin Whether the accessor was an admin or user. If not admin, increments viewer metadata
      * @param uploadID Dataset to find the plant
      * @return a string representation of a JSON value
      */
-    public String getPlantByPlantID(String plantID, String gardenLocation, String uploadID) {
+    public String getPlantByPlantID(String plantID, String gardenLocation, boolean admin, String uploadID) {
 
         if (!ExcelParser.isValidUploadId(db, uploadID))
             return "null";
@@ -136,7 +143,7 @@ public class PlantController {
             jsonPlant = plantCollection.find(and(eq("id", plantID),
                     eq("gardenLocation", gardenLocation),
                     eq("uploadId", uploadID)))
-                    .projection(fields(include("id", "commonName", "cultivar", "gardenLocation")));
+                    .projection(fields(include("id", "commonName", "cultivar", "gardenLocation", "photoPath")));
 
             Iterator<Document> iterator = jsonPlant.iterator();
 
@@ -144,20 +151,56 @@ public class PlantController {
             //Increase the pageViews for that plant
             //Add a visit to the plant
             if (iterator.hasNext()) {
-                incrementMetadata(plantID, "pageViews", uploadID);
-                addVisit(plantID, gardenLocation, uploadID);
                 returnVal = iterator.next().toJson();
             } else {
+                System.err.println("Request for plant (id=" + plantID + ",gardenLocation=" + gardenLocation +",uploadId=" + uploadID +") that doesn't exist.");
                 returnVal = "null";
+                return returnVal;
             }
 
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             returnVal = "null";
+            return returnVal;
+        }
+
+        //returnVal is not null.
+        if(!admin) {
+            incrementMetadata(plantID, "pageViews", uploadID);
+            addVisit(plantID, gardenLocation, uploadID);
         }
 
         return returnVal;
 
     }
+
+    public void getPlantPhoto(OutputStream outputStream, String plantId, String gardenLocation, String uploadID) {
+        try {
+            Document filterDoc = new Document();
+
+            filterDoc.append("id", plantId);
+            filterDoc.append("gardenLocation", gardenLocation);
+            filterDoc.append("uploadId", uploadID);
+
+            Iterator<Document> iter = plantCollection.find(filterDoc).iterator();
+
+            Document plant = iter.next();
+            String filePath = plant.getString("photoPath");
+
+//            String filePath = ".photos" + '/' + plantId + ".png";
+            File file = new File(filePath);
+            try {
+                BufferedImage photo = ImageIO.read(file);
+                ImageIO.write(photo,"JPEG",outputStream);
+            } catch (IIOException e) {}
+
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.err.println("Could not write some Images to disk, exiting.");
+        }
+    }
+
 
     public static final int PLANT_FEEDBACK_LIKES = 0,
                             PLANT_FEEDBACK_DISLIKES = 1,

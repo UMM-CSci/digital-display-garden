@@ -1,0 +1,82 @@
+<div *ngIf="this.authorized" class="photo-page">
+    <h2>Upload a Plant Photo</h2>
+
+    <label for="searchBar">Choose a flower to upload a picture for: </label>
+    <input id="searchBar" type="text" [ngModel]="searchTerms" (ngModelChange)="handleSearchTerms($event)" placeholder="Find a flower by name or bed" class="search-field"/>
+<br>
+<div class="plant-list-body">
+    <ul>
+        <li *ngFor="let planta of plantListService.getFilteredPlants()" (click)="listEntryClicked(planta)">
+            <a>
+                <span class="common-name">{{ planta.commonName }}</span>
+                <span class="cultivar"> &#183; {{ planta.cultivar}}</span>
+                <span class="cultivar"> &#183; Bed {{ planta.gardenLocation}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+    <div *ngIf="plant">
+        <br>
+        <u><strong>Selected Plant</strong></u><br>
+        <strong>Common Name:</strong> {{plant.commonName}}<br>
+        <strong>Cultivar:</strong> {{plant.cultivar}}<br>
+        <br>
+
+        <div *ngIf="plant.photoPath">
+            <img [attr.src]="this.URL + 'plant/' + this.plant.gardenLocation+ '/' + this.plant.id + '/getPhoto'" width = "100%">
+            <br> Uploading new photo will replace this photo.
+        </div><br>
+
+        <file-upload #fu (change)="filename = undefined; uploadAttempted = false" [multiple]="false">-</file-upload>
+
+        <button *ngIf="filename === undefined" class="btn btn-primary" (click)="this.handleUpload();" style="margin-top: 10px">
+            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            Upload
+        </button>
+
+        <div *ngIf="filename!==undefined"> Your file was successfully uploaded for plant {{this.plant.commonName}} {{this.plant.cultivar}} in bed {{this.plant.gardenLocation}}.
+        </div>
+        <div *ngIf="filename === undefined && uploadAttempted === true">File upload failed.</div>
+
+    </div>
+
+    <div *ngIf="!plant && clicked && this.clicked === true">
+        Invalid plant ID
+
+    </div>
+    <div>
+        <br>
+        <button  [routerLink]="['/admin']" class="btn btn-primary" style="float: right">Back to Admin Page</button>
+    </div>
+
+</div>
+
+<style>
+    .plant-list-body {
+        background-color: #ffffff;
+        overflow: scroll;
+        overflow-x: hidden;
+        padding-top: 6px;
+        width: 70%;
+        height: 25%;
+    }
+    .plant-list-body a {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-style: normal;
+        font-size: 1em;
+        line-height: 1em;
+        color: #3b3b3b;
+        text-decoration: none;
+    }
+    .plant-list-body li {
+        padding: .3em 0em;
+    }
+    .plant-list-body li:hover {
+        background-color: #cccccc;
+    }
+    #searchBar {
+        width:45%;
+    }
+
+</style>

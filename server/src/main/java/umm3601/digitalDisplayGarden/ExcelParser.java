@@ -197,7 +197,6 @@ public class ExcelParser {
             //to limit the amount of cases to put in replaceKeyName(..) below.
             for(int j = keyrow_start; j < keyrow_end; j++){
                 keys[i] = keys[i] + cellValues[j][i].replaceAll(" ", "").toUpperCase();
-                System.out.println(cellValues[j][i] + "][" + keys[i]);
             }
         }
 
@@ -329,12 +328,12 @@ public class ExcelParser {
                     doc.append(keys[j], cellValues[i][j]);
                 }
 
-                System.out.println(doc);
                 if (doc.get("gardenLocation").equals(""))
                     continue;
 
                 // Initialize the empty metadata
                 doc.append("metadata", emptyMetadataDoc);
+                doc.append("photoPath", "");
                 doc.append("uploadId", uploadId);
                 plantCollection.insertOne(doc);
             }

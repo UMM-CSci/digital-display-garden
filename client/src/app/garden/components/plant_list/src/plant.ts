@@ -24,6 +24,8 @@ export class Plant {
     /** Garden Location (or Bed Name) for the plant within the spreadsheet. */
     gardenLocation: string;
 
+    /** Relative path on the server where the  */
+    photoPath: string;
 
     /**
      * Creates a Plant with all of the provided data.
@@ -33,12 +35,13 @@ export class Plant {
      * @param source
      * @param gardenLocation - also known as the bed name
      */
-    constructor(id: string, commonName: string, cultivar: string, source: string, gardenLocation: string) {
+    constructor(id: string, commonName: string, cultivar: string, source: string, gardenLocation: string, photoPath : string) {
         this.id = id;
         this.commonName = commonName;
         this.cultivar = cultivar;
         this.source = source;
         this.gardenLocation = gardenLocation;
+        this.photoPath = photoPath;
     }
 
 }
