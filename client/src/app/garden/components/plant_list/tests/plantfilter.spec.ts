@@ -71,6 +71,7 @@ describe("Test Plant Filter", () => {
         plants.push(new Plant("PlantID5", "CommonName2", "Cultivar3", "Source5", "BedName5", ""));
         plants.push(new Plant("PlantID6", "CommonName2", "Caltivar3", "Source6", "BedName6", ""));
 
+
         let filteredPlants: Plant[] = PlantFilter.filterByTerms("altiva BedName", plants);
         expect(filteredPlants.length).toBe(3);
 

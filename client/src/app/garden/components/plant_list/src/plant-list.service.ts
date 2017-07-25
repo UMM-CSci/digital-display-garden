@@ -129,6 +129,7 @@ export class PlantListService {
     /**
      * Filter plants by arbitrary terms
      * @param searchTerms - search terms to filter by
+
      */
     public setSearchTerms(searchTerms: string): void{
         if(isUndefined(searchTerms)) {
@@ -161,6 +162,7 @@ export class PlantListService {
             this.plantCollection.updatePlant(plant);
             this.filterPlants();
         });
+
     }
 
     /**
