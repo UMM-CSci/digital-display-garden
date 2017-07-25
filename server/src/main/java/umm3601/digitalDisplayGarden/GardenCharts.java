@@ -5,15 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mongodb.client.*;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import java.util.Iterator;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.exists;
-import static com.mongodb.client.model.Projections.include;
-import static com.mongodb.client.model.Projections.fields;
 
 import java.io.IOException;
 import java.util.*;

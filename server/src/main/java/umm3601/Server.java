@@ -18,8 +18,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -36,11 +34,15 @@ public class Server {
     public static String PUBLIC_URL;
 
     private static String clientId;
+
     private static String clientSecret;
+
     private static String callbackURL;
 
     public static String databaseName;
+
     public static MongoDatabase database;
+
     public static int serverPort;
 
     private static String excelTempDir = "/tmp/digital-display-garden";
@@ -216,7 +218,7 @@ public class Server {
             if(isVisitor == null)
                 plant = plantController.getPlantByPlantID(id, bed, false, getLiveUploadId());
             else
-                plant = plantController.getPlantByPlantID(id, bed, isVisitor.equals("false"), getLiveUploadId());
+                plant = plantController.getPlantByPlantID(id, bed, "false".equals(isVisitor), getLiveUploadId());
 
             return plant;
         });

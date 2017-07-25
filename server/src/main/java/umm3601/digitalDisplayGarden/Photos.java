@@ -1,9 +1,6 @@
 package umm3601.digitalDisplayGarden;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import javax.imageio.ImageIO;
@@ -67,7 +64,7 @@ public class Photos {
             Document photoPath = new Document();
             photoPath.append("photoPath", relPath);
 
-            Document result = plantCollection.findOneAndUpdate(filterDoc,new Document("$set", photoPath));
+            plantCollection.findOneAndUpdate(filterDoc,new Document("$set", photoPath));
         }
         catch (IOException ioe) {
             ioe.printStackTrace();

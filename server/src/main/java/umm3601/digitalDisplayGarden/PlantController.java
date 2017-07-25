@@ -33,9 +33,13 @@ import static com.mongodb.client.model.Updates.push;
 public class PlantController {
 
     private final MongoCollection<Document> plantCollection;
+
     private final MongoCollection<Document> commentCollection;
+
     private final MongoCollection<Document> configCollection;
+
     private final MongoCollection<Document> bedCollection;
+
     private final MongoDatabase db;
 
     public PlantController(MongoDatabase database) {
@@ -60,8 +64,9 @@ public class PlantController {
      * @throws com.mongodb.MongoCommandException when the id is valid and the field is empty
      */
     public boolean incrementMetadata(String plantID, String field, String uploadId) {
-        if (!ExcelParser.isValidUploadId(db, uploadId))
+        if (!ExcelParser.isValidUploadId(db, uploadId)) {
             return false;
+        }
 
         Document searchDocument = new Document();
         searchDocument.append("id", plantID);
@@ -134,8 +139,9 @@ public class PlantController {
      */
     public String getPlantByPlantID(String plantID, String gardenLocation, boolean admin, String uploadID) {
 
-        if (!ExcelParser.isValidUploadId(db, uploadID))
+        if (!ExcelParser.isValidUploadId(db, uploadID)) {
             return "null";
+        }
 
         FindIterable<Document> jsonPlant;
         String returnVal;
@@ -203,8 +209,12 @@ public class PlantController {
 
 
     public static final int PLANT_FEEDBACK_LIKES = 0,
+
                             PLANT_FEEDBACK_DISLIKES = 1,
-                            PLANT_FEEDBACK_COMMENTS = 2;
+
+                            PLANT_FEEDBACK_COMMENTS = 2,
+
+                            PLANT_FEEDBACK_FIELDS = 3;
 
     /**
      * This gets an array of feedback counts for plants.
@@ -238,14 +248,16 @@ public class PlantController {
             //Loop through all of the entries within the array, counting like=true(like) and like=false(dislike)
             for(Document rating : ratings)
             {
-                if(rating.get("like").equals(true))
+                if(rating.get("like").equals(true)) {
                     likes++;
-                else if(rating.get("like").equals(false)) // THIS IS IMPORTANT (do not delete)
+                }
+                else if(rating.get("like").equals(false)) { // THIS IS IMPORTANT (do not delete)
                     dislikes++;
+                }
             }
         }
         else return null;
-        long[] out = new long[3];
+        long[] out = new long[PLANT_FEEDBACK_FIELDS];
         out[PLANT_FEEDBACK_LIKES] = likes;
         out[PLANT_FEEDBACK_DISLIKES] = dislikes;
         out[PLANT_FEEDBACK_COMMENTS] = comments;

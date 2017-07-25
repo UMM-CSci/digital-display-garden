@@ -7,11 +7,7 @@ import org.bson.conversions.Bson;
 
 import java.util.Date;
 import java.util.Iterator;
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.*;
-import static com.mongodb.client.model.Projections.fields;
-import static umm3601.digitalDisplayGarden.FeedbackWriter.*;
 
 import java.io.IOException;
 

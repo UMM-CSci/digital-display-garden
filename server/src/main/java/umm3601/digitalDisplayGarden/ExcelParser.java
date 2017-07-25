@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.InputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.*;
@@ -22,9 +21,6 @@ import org.bson.BsonArray;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import javax.print.Doc;
 //import sun.text.normalizer.UTF16;
 
 /**
@@ -38,9 +34,13 @@ public class ExcelParser {
     private InputStream stream;
 
     private final MongoDatabase database;
+
     private final MongoCollection plantCollection;
+
     private final MongoCollection bedCollection;
+
     private final MongoCollection configCollection;
+
     private final MongoCollection commentCollection;
 
     public ExcelParser(InputStream stream, MongoDatabase database){
@@ -83,7 +83,7 @@ public class ExcelParser {
 
             String[][] cellValues = new String[datatypeSheet.getLastRowNum() + 1]
                     [max(max(datatypeSheet.getRow(1).getLastCellNum(), datatypeSheet.getRow(2).getLastCellNum()),
-                    datatypeSheet.getRow(3).getLastCellNum())];
+                    datatypeSheet.getRow(0).getLastCellNum())];
 
             for (Row currentRow : datatypeSheet) {
                 //cellValues[currentRow.getRowNum()] = new String[currentRow.getLastCellNum()];
@@ -117,6 +117,7 @@ public class ExcelParser {
         // scanning over columns
         for(int j = cellValues[1].length - 1; j > 0; j--){
             //scanning over the three rows of our "key row"
+            //TODO this is a problem if they introduce more key rows into the spreadsheet
             for(int i = 1; i <= 3; i++) {
                 if(cellValues[i][j] != null){
                     return trimArrayHorizontally(cellValues, j);
@@ -184,10 +185,10 @@ public class ExcelParser {
     * 2. Adds all keys into a 1D string array
     * 3. Replaces certain key words so they match with the standard committee's requirements
     * @param cellValues
-    * @param keyrow_start The first row that will be concatenated into a key
-     * @param keyrow_end The last row that will be concatenated into a key
+    * @param keyRowStart The first row that will be concatenated into a key
+     * @param keyRowEnd The last row that will be concatenated into a key
     */
-    public static String[] getKeys(String[][] cellValues, int keyrow_start, int keyrow_end){
+    public static String[] getKeys(String[][] cellValues, int keyRowStart, int keyRowEnd){
         String[] keys = new String[cellValues[0].length];
 
         for(int i = 0; i < cellValues[0].length; i++){
@@ -195,7 +196,7 @@ public class ExcelParser {
             //With regards to the replaceAll, just trim() isn't what we want for easy
             //comparison of the key strings. We want everything to be compressed as possible
             //to limit the amount of cases to put in replaceKeyName(..) below.
-            for(int j = keyrow_start; j < keyrow_end; j++){
+            for(int j = keyRowStart; j < keyRowEnd; j++){
                 keys[i] = keys[i] + cellValues[j][i].replaceAll(" ", "").toUpperCase();
             }
         }
