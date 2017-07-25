@@ -25,7 +25,6 @@ import { AdminComponent } from "./app/admin/src/admin.component";
 import { PlantComponent } from "./app/garden/components/plant_list/src/plant.component";
 import { ImportComponent } from "./app/admin/src/import.component";
 import { DeleteComponent } from "./app/admin/src/delete.component";
-import { PhotoComponent } from "./app/admin/src/photo.component";
 import { AdminService } from "./app/admin/src/admin.service";
 import { ExportComponent } from "./app/admin/src/export.component";
 import { FileUploadComponent } from "./app/admin/src/file-upload.component";
@@ -58,7 +57,6 @@ import { RouterModule } from "@angular/router";
         PlantListComponent,
         BedDropdownComponent,
         PlantComponent,
-        PhotoComponent,
         AdminComponent,
         ImportComponent,
         ExportComponent,
