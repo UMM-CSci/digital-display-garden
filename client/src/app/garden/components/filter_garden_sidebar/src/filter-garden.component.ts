@@ -6,7 +6,10 @@
  */
 import { Component } from '@angular/core';
 import {BedDropdownService} from "../../bed_dropdown/src/bed-dropdown.service";
-import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-name-dropdown.service";
+import {ActivatedRoute} from "@angular/router";
+import {PlantListService} from "../../plant_list/src/plant-list.service"
+import {Location} from '@angular/common';
+import {PlantFilter} from "../../plant_list/src/plantfilter";
 
 @Component({
     selector: 'filter-garden-component',
@@ -14,9 +17,40 @@ import {CommonNameDropdownService} from "../../common_name_dropdown/src/common-n
 })
 
 export class FilterGardenComponent {
+    private searchTerms : string;
 
-    constructor(private bedListService: BedDropdownService,
-                private commonNameListService: CommonNameDropdownService){ }
+    constructor(private bedListService: BedDropdownService,private plantListService: PlantListService,
+                private location: Location, private route :ActivatedRoute){ }
 
+    ngOnInit(){
+        //Send reportBedVisit Post request
+        this.route.queryParams.subscribe(
+            qparams => {
+                let searchTerms: string = qparams["query"];
+                this.searchTerms=searchTerms;
+            });
+    }
+
+    /**
+     * Pass on the search terms to the PlantListService
+     * replacing the location state if necessary
+     * @param searchTerms
+     */
+    private handleSearchTerms(searchTerms): void{
+        if(searchTerms == "") {
+            //searchTerms = PlantFilter.NO_FILTER;
+            this.location.replaceState("/bed/" + this.plantListService.getBedFilter());
+        }
+        else
+            this.location.replaceState("/bed/" + this.plantListService.getBedFilter() + "?query="+searchTerms);
+
+        // Filter plant list
+        this.plantListService.setSearchTerms(searchTerms);
+    }
+
+    //programatically set Search terms
+    public setSearchTerms(searchTerms : string) : void{
+        this.searchTerms = searchTerms;
+    }
 }
 

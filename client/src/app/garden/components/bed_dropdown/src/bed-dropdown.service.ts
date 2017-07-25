@@ -60,7 +60,6 @@ export class BedDropdownService {
      * @returns {Observable<R>}
      */
     reportBedVisit(gardenLocation : string, isQR : boolean): Observable<boolean> {
-        console.log("!?");
         if(isQR) {
             return this.http.post(this.URL + "qrVisit", gardenLocation).map(res => res.json());
         } else {

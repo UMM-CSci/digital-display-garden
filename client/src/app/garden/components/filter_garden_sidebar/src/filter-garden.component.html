@@ -5,85 +5,85 @@
     @editor Iteration 2 - Team Omar Anwar
     @editor Iteration 3 - Team Revolver en Guardia
     @editor Iteration 4 - Team Revolver en Guardia++
+    @editor DDG Team    - Digital Display Garden
 -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            /* http://meyerweb.com/eric/tools/css/reset/ 2. v2.0 | 20110126                  License: none (public domain) */
-            html, div {
-                margin: 0;
-                padding: 0;
-                border: 0;
-                font-size: 100%;
-                font: inherit;
-                vertical-align: baseline;
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* http://meyerweb.com/eric/tools/css/reset/ 2. v2.0 | 20110126                  License: none (public domain) */
+        html, div {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        .row-filter {
+            background: linear-gradient(#FFDE7A, #ffcc00);
+            padding-top: 1em;
+            padding-bottom: 1.5em;
+        }
+        @media only screen and (max-width: 414px) {
+            [class="row-filter"] {
+                padding-bottom: 1em;
             }
-            .row-filter {
-                background: linear-gradient(#FFDE7A, #ffcc00);
-                padding-top: 1em;
-                padding-bottom: 1.5em;
+        }
+        .drop-downs {
+            width: 50%;
+            margin: 0em auto;
+        }
+        @media only screen and (max-width: 768px) {
+            [class="drop-downs"] {
+                width: 95%;
             }
-            @media only screen and (max-width: 414px) {
-                [class="row-filter"] {
-                    padding-bottom: 1em;
-                }
+        }
+        @media only screen and (width: 768px), screen and (width: 1024px) {
+            [class="drop-downs"] {
+                width: 80%;
             }
-            .drop-downs {
-                width: 50%;
-                margin: 0em auto;
+        }
+        .bed,
+        .common-name{
+            display: inline-block;
+        }
+        .bed {
+            margin-right: 1em;
+        }
+        @media only screen and (max-width: 375px) {
+            [class="bed"]{
+                margin-bottom: .5em;
             }
-            @media only screen and (max-width: 768px) {
-                [class="drop-downs"] {
-                    width: 95%;
-                }
+        }
+        .just-deco {
+            background: linear-gradient(#537d39, #283d1c);
+            padding: 3em 0em;
+        }
+        @media only screen and (max-width: 414px) {
+            [class="just-deco"] {
+                padding: 0em;
             }
-            @media only screen and (width: 768px), screen and (width: 1024px) {
-                [class="drop-downs"] {
-                    width: 80%;
-                }
-            }
-            .bed,
-            .common-name{
-                display: inline-block;
-            }
-            .bed {
-                margin-right: 1em;
-            }
-            @media only screen and (max-width: 375px) {
-                [class="bed"]{
-                    margin-bottom: .5em;
-                }
-            }
-            .just-deco {
-                background: linear-gradient(#537d39, #283d1c);
-                padding: 3em 0em;
-            }
-            @media only screen and (max-width: 414px) {
-                [class="just-deco"] {
-                    padding: 0em;
-                }
-            }
-        </style>
-    </head>
+        }
+    </style>
+</head>
 
-    <div class="row-filter">
+<div class="row-filter">
 
-        <div class="drop-downs">
+    <div class="drop-downs">
 
-            <div class="bed">
-                <bed-dropdown></bed-dropdown>
-            </div>
-
-            <div class="common-name">
-                <common-name-dropdown></common-name-dropdown>
-            </div>
-
+        <div class="searchField col-xs-8">
+            <input type="text" [ngModel]="searchTerms" (ngModelChange)="handleSearchTerms($event)" placeholder="Find a flower by name or bed" class="form-control search-field"/>
+        </div>
+        <div class="bed">
+            <bed-dropdown></bed-dropdown>
         </div>
 
     </div>
 
-    <div class="just-deco"></div>
+</div>
+
+<div class="just-deco"></div>
 
 </html>

@@ -13,6 +13,7 @@ import { Plant } from './plant';
 import { Observable } from "rxjs";
 import {PlantCollection} from "./plantcollection";
 import {PlantFilter} from "./plantfilter";
+import {isUndefined} from "util";
 
 @Injectable()
 export class PlantListService {
@@ -26,12 +27,9 @@ export class PlantListService {
     // Plants to display within the PlantListComponent
     private filteredPlants: Plant[] = [];
 
-    // Current common name filter for plants within PlantListComponent
-    private commonNameFilter: string = PlantFilter.NO_FILTER;
-
     // Current bed filter for plants within PlantListComponent
     private bedFilter: string = PlantFilter.NO_FILTER;
-
+    public searchTerms: string = ""; //This is public so that it can be bound within filter-garden-component
     constructor(private http:Http) {
         this.getPlantsFromServer().subscribe(
             plants => {
@@ -70,13 +68,13 @@ export class PlantListService {
      * Requests that the PlantListComponent be updated according to the currently set filters.
      */
     private filterPlants(): void{
-        console.log(this.bedFilter);
+
         // Filter from the master plant collection
         let plantsBeingFiltered: Plant[] = this.plantCollection.getPlants();
 
         // Apply filters to plant list
         plantsBeingFiltered = PlantFilter.filterByBedName(this.bedFilter, plantsBeingFiltered);
-        plantsBeingFiltered = PlantFilter.filterByCommonName(this.commonNameFilter, plantsBeingFiltered);
+        plantsBeingFiltered = PlantFilter.filterByTerms(this.searchTerms, plantsBeingFiltered);
 
         // Bind the filtered plants to be displayed
         this.filteredPlants = plantsBeingFiltered;
@@ -100,7 +98,9 @@ export class PlantListService {
      */
     public setBedFilter(bedFilter: string): void{
         this.bedFilter = bedFilter;
-        this.filterPlants();
+        if(!isUndefined(this.plantCollection)) {
+            this.filterPlants();
+        }
     }
 
     /**
@@ -117,12 +117,27 @@ export class PlantListService {
     }
 
     /**
-     * Filter the plants by the provided common name filter.
-     * @param commonNameFilter - common name to filter by
+     * Filter plants by arbitrary terms
+     * @param searchTerms - search terms to filter by
      */
-    public setCommonNameFilter(commonNameFilter: string): void{
-        this.commonNameFilter = commonNameFilter;
-        this.filterPlants();
+    public setSearchTerms(searchTerms: string): void{
+        if(isUndefined(searchTerms)) {
+            this.searchTerms = "";
+        }
+        else {
+            this.searchTerms = searchTerms;
+        }
+
+        this.refreshSearchTerms();
+    }
+
+    /**
+    Filter plants according to the current SearchTerms
+     */
+    public refreshSearchTerms(): void{
+        if(!isUndefined(this.plantCollection)) {
+            this.filterPlants();
+        }
     }
 
     /**
@@ -133,12 +148,10 @@ export class PlantListService {
         return this.bedFilter;
     }
 
-    /**
-     * Returns the current common name filter for the plants.
-     * @returns {string} - common name filter for plants
-     */
-    public getCommonNameFilter(): string{
-        return this.commonNameFilter;
+    public getSearchTerms(): string{
+        return this.searchTerms;
     }
+
+
 
 }

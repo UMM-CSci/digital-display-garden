@@ -22,7 +22,7 @@ export class PlantFilter {
      */
     public static filterByBedName(bedName: string, plants: Plant[]): Plant[]{
 
-        // If do not filter original plant list
+        // If there is no filter do not filter original plant list
         if(bedName == PlantFilter.NO_FILTER)
             return plants;
 
@@ -46,9 +46,9 @@ export class PlantFilter {
      */
     public static filterByCommonName(commonName: string, plants: Plant[]): Plant[]{
 
-        // If do not filter original plant list
+        // If there is no filter do not filter original plant list
         if(commonName == PlantFilter.NO_FILTER)
-            // Return original plant list
+        // Return original plant list
             return plants;
 
         // Else, apply filter
@@ -56,6 +56,48 @@ export class PlantFilter {
 
         plants.forEach((plant, index) => {
             if (plant.commonName == commonName)
+                filteredPlants.push(plant);
+        });
+
+        return filteredPlants;
+    }
+
+    /**
+     * Filters the provided plant collection by the provided terms
+     * Filters for plants where each of the terms match a substring
+     * of the plant's cultivar, common name, or bed.
+     *
+     * @param terms - the search terms to filter by
+     * @param plants - the plants array to filter
+     * @returns {Plant[]} - the filtered plant array
+     */
+    public static filterByTerms(terms: string, plants: Plant[]): Plant[]{
+
+        // If there is no filter do not filter original plant list
+        // Return original plant list
+        if(terms == PlantFilter.NO_FILTER || terms == "")
+            return plants;
+
+        // Else, apply filter
+        let filteredPlants: Plant[] = [];
+        let termList = terms.split(" ");
+
+        plants.forEach((plant, index) => {
+            //Loop through terms,
+
+            //A plant passes on if ALL of the terms match something:
+            //Common name, cultivar or bed
+            let matches : number = 0;
+            termList.forEach((term, index) =>
+            {
+                term = term.toLocaleLowerCase();
+                if (plant.commonName.toLocaleLowerCase().includes(term) ||
+                    plant.cultivar.toLocaleLowerCase().includes(term) ||
+                    plant.gardenLocation.toLocaleLowerCase().includes(term)) //Beds have letters sometimes
+                    matches++;
+            });
+
+            if(matches == termList.length)
                 filteredPlants.push(plant);
         });
 

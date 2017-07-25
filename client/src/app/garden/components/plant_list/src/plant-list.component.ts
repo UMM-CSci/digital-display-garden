@@ -10,8 +10,10 @@ import {PlantListService} from "./plant-list.service";
 import {ActivatedRoute} from "@angular/router";
 import {BedDropdownComponent} from "../../bed_dropdown/src/bed-dropdown.component";
 import {BedDropdownService} from "../../bed_dropdown/src/bed-dropdown.service";
+import {FilterGardenComponent} from "../../filter_garden_sidebar/src/filter-garden.component";
 import {GardenComponent} from "../../../src/garden-component";
 import {Location} from '@angular/common';
+import {isUndefined} from "util";
 
 @Component({
     selector: 'plant-list',
@@ -24,29 +26,35 @@ export class PlantListComponent implements OnInit {
 
     ngOnInit(){
         //Send reportBedVisit Post request
-        this.route.queryParams
-            .map(queryParams => queryParams['qr'])
-            .subscribe(isQr => {
+        this.route.queryParams.subscribe(
+            qparams => {
                 this.route.params.subscribe(params => {
-                    var bedName = params['id'];
+                    let bedName = params['id'];
+                    let isQr : boolean = qparams["qr"];
+                    let searchTerms : string = qparams["query"];
 
                     //Send post request to server reporting a Bed Visit
                     this.bedListService.reportBedVisit(bedName, isQr).subscribe();
 
-                    //This hides the qr=true query param from the user (and removes it from browser history)
-                    this.location.replaceState("/bed/" + bedName);
+                    //Replace URL to hide the qr=true query param from the user (and removes it from browser history)
+                    if(searchTerms == "" || isUndefined(searchTerms)) {
+                        this.location.replaceState("/bed/" + this.plantListService.getBedFilter());
+                    }
+                    else
+                    {
+                        this.plantListService.setSearchTerms(searchTerms);
+                        this.location.replaceState("/bed/" + this.plantListService.getBedFilter() + "?query=" + searchTerms);
+                    }
+
 
                     //Tell the plantListService what bed it should filter by
                     if(bedName != "all")
                         this.plantListService.prepareBedFilter(bedName);
 
                 });
-                err => {
-                    console.log(err);
-                }
-            });
+            },
             err => {
                 console.log(err);
-            }
+            });
     }
 }
